@@ -1,0 +1,170 @@
+/* Genel sayfa düzeni */
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+}
+
+/* Üst header */
+.header {
+  height: 80px;
+  background-color: #813FB4;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+}
+
+/* Logo */
+.logo {
+  height: 80px;
+  width: 80px;
+  margin-right: -10px;
+}
+
+/* Kullanıcı balonu */
+.userBubble {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 12px;
+  background-color: #653496;
+  padding: 6px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.userBubble:hover {
+  background-color: #9a5fd4;
+}
+
+.userIcon {
+  height: 32px;
+  width: 32px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: rgb(255, 255, 255);
+  border-right: 1px solid #d1d5db;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+}
+
+/* Menü kapsayıcı */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Menü linkleri */
+.nav a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  color: rgb(85, 85, 85);
+  display: flex;
+}
+
+.nav a img {
+  margin-right: 12px;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
+.nav a:hover {
+  background-color: #e5e7eb;
+}
+
+/* Çıkış butonu */
+.logoutButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f3f4f6;
+  color: rgb(85, 85, 85);
+  font-weight: 800;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  margin-top: 8px;
+  margin-bottom:20px ;
+}
+
+.logoutButton:hover {
+  background-color: #e5e7eb;
+}
+
+.main {
+  flex: 1;
+  margin-left: 280px;
+  background-color: white;
+  padding: 24px;
+  min-height: calc(100vh - 3rem);
+}
+
+.searchContainer {
+  margin-bottom: 12px;
+}
+
+.searchInput {
+  width: 100%;
+  border: 2px solid #d6d6d6;
+  color: #6b7280;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+  font-weight: 600;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 2px #813FB4;
+  border-color: #813FB4;
+}
+
+.dateTimeBox {
+  margin-left: 25px;
+  margin-right: 20px;
+  text-align: right;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 500;
+  color: #f3f3f3;
+  margin-bottom: 2px;
+}
+
+.time {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
