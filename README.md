@@ -1,0 +1,2 @@
+# Stofina
+Stofina client architecture
