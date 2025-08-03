@@ -113,7 +113,7 @@
   border-radius: 8px;
   transition: background-color 0.2s ease;
   margin-top: 8px;
-  margin-bottom:20px ;
+  margin-bottom: 20px;
 }
 
 .logoutButton:hover {
@@ -125,7 +125,7 @@
   margin-left: 280px;
   background-color: white;
   padding: 24px;
-  min-height: calc(100vh - 3rem);
+  min-height: calc(100vh - 80px);
 }
 
 .searchContainer {

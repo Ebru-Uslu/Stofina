@@ -2,6 +2,7 @@
 import { Quicksand } from "next/font/google";
 import styles from "./DashboardLayout.module.css";
 import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["400", "600", "700"] });
 
@@ -12,17 +13,21 @@ const menuItems = [
   { label: "Müşteri Tanımlama ve Yönetimi", href: "#", icon: "/menu-icon/add_customer.png" },
   { label: "Müşteri Portföy", href: "#", icon: "/menu-icon/basket.png" },
   { label: "Müşteri Hesap Yönetimi", href: "#", icon: "/menu-icon/wallet.png" },
-  { label: "Bakiye ve Stok Yönetimi", href: "#", icon: "/menu-icon/balance.png" },
-  { label: "Emir Takip", href: "#", icon: "/menu-icon/order.png" },
+  { label: "Bakiye ve Stok Yönetimi", href: "stock-management", icon: "/menu-icon/balance.png" },
+  { label: "Emir Takip", href: "order-tracking", icon: "/menu-icon/order.png" },
   { label: "Raporlama", href: "#", icon: "/menu-icon/report.png" },
-  { label: "Kullanıcı Yönetimi", href: "#", icon: "/menu-icon/portfolio.png" },
-  { label: "Ayarlar", href: "#", icon: "/menu-icon/setting.png" },
+  { label: "Kullanıcı Yönetimi", href: "user-management", icon: "/menu-icon/portfolio.png" },
+  { label: "Ayarlar", href: "login", icon: "/menu-icon/setting.png" },
 ];
+
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   // ✅ Başlangıçta null, client açıldığında dolacak
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+
+  const path = usePathname();
 
   useEffect(() => {
     setCurrentTime(new Date()); // ilk değer
@@ -54,11 +59,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <p className={styles.date}>
             {currentTime
               ? currentTime.toLocaleDateString("tr-TR", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })
               : "Yükleniyor..."}
           </p>
           <p className={styles.time}>
@@ -83,12 +88,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {searchTerm && (
               <nav className={styles.nav} style={{ marginTop: "27.5px" }}>
                 {filteredItems.length > 0 ? (
-                  filteredItems.map((item) => (
-                    <a key={item.label} href={item.href}>
-                      <img src={item.icon} alt={item.label} className="w-6 h-6" />
-                      {item.label}
-                    </a>
-                  ))
+                  filteredItems.map((item) => {
+                    const isActive = path.endsWith(item.href) // örn: "/dashboard/order-tracking"
+                    return (
+                      <a key={item.label} href={item.href} className={`${path.endsWith(item.href) ? 'bg-[#813FB4]/10' : ''}`}>
+                        <img src={item.icon} alt={item.label} className="w-6 h-6" />
+                        {item.label}
+                      </a>
+                    )
+                  })
                 ) : (
                   <p className="text-center text-gray-500 p-2">Sonuç bulunamadı</p>
                 )}
@@ -98,12 +106,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {!searchTerm && (
             <nav className={styles.nav}>
-              {menuItems.map((item) => (
-                <a key={item.label} href={item.href}>
-                  <img src={item.icon} alt={item.label} className="w-6 h-6" />
-                  {item.label}
-                </a>
-              ))}
+              {menuItems.map((item) => {
+                return (
+                  <a key={item.label} href={item.href} className={`${path.endsWith(item.href) ? 'bg-[#813FB4]/30 ' : ''}`}>
+                    <img src={item.icon} alt={item.label} className="w-6 h-6" />
+                    {item.label}
+                  </a>
+                )
+              })}
             </nav>
           )}
 

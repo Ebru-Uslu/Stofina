@@ -1,7 +1,11 @@
 export interface Customer {
-    id: string;
+    id: number;
     name: string;
     email: string;
     createdAt: Date;
     updatedAt: Date;
+    accountNumber: string;
+    tckn: string;
+    customerType: string;
 }
+

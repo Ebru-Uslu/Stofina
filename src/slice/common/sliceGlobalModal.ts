@@ -9,6 +9,7 @@ interface SliceGlobalModal {
     multipleButtons?: boolean; // Birden fazla buton olup olmadığını belirtir
     modalResult: boolean | null; // Modalın sonucu (kullanıcı onayladı mı?)
 
+
 }
 
 const initialState: SliceGlobalModal = {
