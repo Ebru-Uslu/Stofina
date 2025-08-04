@@ -7,17 +7,18 @@ import { usePathname, useRouter } from "next/navigation";
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["400", "600", "700"] });
 
 const menuItems = [
+  { label: "Kontrol Paneli", href: "#", icon: "/menu-icon/trade.png" },
   { label: "Hisse Alım Satımı", href: "#", icon: "/menu-icon/trade.png" },
   { label: "Hisse Senetleri", href: "#", icon: "/menu-icon/stock.png" },
-  { label: "Hisse Senedi Tanımlama", href: "#", icon: "/menu-icon/add_stock.png" },
-  { label: "Müşteri Tanımlama ve Yönetimi", href: "#", icon: "/menu-icon/add_customer.png" },
+  { label: "Hisse Senedi Tanımlama", href: "/dashboard/stock-management", icon: "/menu-icon/add_stock.png" },
+  { label: "Müşteri Tanımlama", href: "/dashboard/bireysel", icon: "/menu-icon/add_customer.png" },
   { label: "Müşteri Portföy", href: "customer-portfolio", icon: "/menu-icon/basket.png" },
   { label: "Müşteri Hesap Yönetimi", href: "customer-management", icon: "/menu-icon/wallet.png" },
-  { label: "Bakiye ve Stok Yönetimi", href: "stock-management", icon: "/menu-icon/balance.png" },
-  { label: "Emir Takip", href: "order-tracking", icon: "/menu-icon/order.png" },
+  { label: "Bakiye ve Stok Yönetimi", href: "#", icon: "/menu-icon/balance.png" },
+  { label: "Emir Takip", href: "#", icon: "/menu-icon/order.png" },
   { label: "Raporlama", href: "#", icon: "/menu-icon/report.png" },
-  { label: "Kullanıcı Yönetimi", href: "user-management", icon: "/menu-icon/portfolio.png" },
-  { label: "Ayarlar", href: "login", icon: "/menu-icon/setting.png" },
+  { label: "Kullanıcı Yönetimi", href: "/dashboard/user-management", icon: "/menu-icon/portfolio.png" },
+  { label: "Ayarlar", href: "#", icon: "/menu-icon/setting.png" },
 ];
 
 

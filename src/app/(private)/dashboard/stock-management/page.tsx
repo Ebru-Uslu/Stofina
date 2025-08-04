@@ -1,198 +1,223 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./StockForm.module.css";
+
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  kodu: yup
+    .string()
+    .required("Lütfen hisse kodunu giriniz.")
+    .matches(/^[A-Z]{1,5}$/, "Hisse kodu yalnızca büyük harflerden oluşmalı ve 1-5 karakter olmalı."),
+  adi: yup
+    .string()
+    .required("Lütfen hisse adını giriniz.")
+    .max(50, "Hisse adı 50 karakterden uzun olamaz."),
+  sirketUnvani: yup
+    .string()
+    .required("Lütfen şirket unvanını giriniz.")
+    .max(100, "Şirket unvanı 100 karakterden uzun olamaz."),
+  payPazari: yup.string().required("Lütfen pay piyasa pazarı seçiniz."),
+  borsa: yup.string().required("Lütfen borsa seçiniz."),
+  paraBirimi: yup.string().required("Lütfen para birimi seçiniz."),
+  isinKodu: yup
+    .string()
+    .required("Lütfen ISIN kodunu giriniz.")
+    .matches(/^TR\d{10}$/, "ISIN kodu TR ile başlamalı ve ardından 10 hane olmalı.")
+}).required();
 
 export default function Page() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    ad: "",
-    soyad: "",
-    telefon: "",
-    email: "",
-    kullaniciAdi: "",
-    unvan: "",
-    yetki: ""
+  const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const popupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      kodu: "",
+      adi: "",
+      sirketUnvani: "",
+      payPazari: "",
+      borsa: "",
+      paraBirimi: "",
+      isinKodu: ""
+    }
   });
 
-  const [showUsersTable, setShowUsersTable] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // Örnek kullanıcılar
-  const users = [
-    { id: 1, ad: "Ali", soyad: "Veli", telefon: "1234567890", email: "ali@example.com", kullaniciAdi: "ali123", unvan: "Mühendis", yetki: "Admin" },
-    { id: 2, ad: "Ayşe", soyad: "Demir", telefon: "0987654321", email: "ayse@example.com", kullaniciAdi: "ayseD", unvan: "Uzman", yetki: "Kullanıcı" },
-    { id: 3, ad: "Mehmet", soyad: "Yılmaz", telefon: "05443332211", email: "mehmet@example.com", kullaniciAdi: "mehmetY", unvan: "Yönetici", yetki: "Manager" }
-  ];
-
-  // Arama filtrelemesi
-  const filteredUsers = users.filter(user =>
-    Object.values(user).some(value =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const showPopup = (message: string, type: "success" | "error") => {
+    setPopup({ message, type });
+    if (popupTimeoutRef.current) clearTimeout(popupTimeoutRef.current);
+    popupTimeoutRef.current = setTimeout(() => setPopup(null), 3000);
   };
 
-  const handleClear = () => {
-    setFormData({
-      ad: "",
-      soyad: "",
-      telefon: "",
-      email: "",
-      kullaniciAdi: "",
-      unvan: "",
-      yetki: ""
-    });
+  const onSubmit = (data: any) => {
+    const requestBody = {
+      symbol: data.kodu,
+      stockName: data.adi,
+      companyName: data.sirketUnvani,
+      equityMarket: data.payPazari,
+      exchange: data.borsa,
+      currency: data.paraBirimi,
+      isinCode: data.isinKodu,
+      status: "INACTIVE",
+      defaultPrice: 0.0,
+      currentPrice: 0.0,
+    };
+
+    fetch("http://localhost:8081/api/v1/market/stocks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Hata oluştu");
+        return res.json();
+      })
+      .then((result) => {
+        showPopup(`Hisse "${data.adi}" başarıyla kaydedildi.`, "success");
+        reset();
+      })
+      .catch((error) => {
+        showPopup("Kayıt sırasında hata oluştu", "error");
+      });
+  };
+
+  const onError = (errors: any) => {
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
+      showPopup(errors[firstErrorField]?.message, "error");
+    }
   };
 
   return (
     <div className={styles.container}>
-
-      {/* 🔘 ÜST BUTONLAR */}
+      {/* ÜST BUTONLAR */}
       <div className={styles.topButtons}>
-        <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
+        <button
+          type="button"
+          className={styles.secondaryButton}
+          onClick={() => router.back()}
+        >
           <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} />
           Geri
-        </button>
-
-        <button type="button" className={styles.secondaryButton} onClick={handleClear}>
-          <img src="/menu-icon/clear.png" alt="Temizle" className={styles.icon} />
-          Temizle
         </button>
 
         <button
           type="button"
           className={styles.secondaryButton}
-          onClick={() => setShowUsersTable(!showUsersTable)}
+          onClick={() => reset()}
         >
-          <img src="/menu-icon/persons.png" alt="Listele" className={styles.icon} />
-          Kullanıcıları Listele
+          <img src="/menu-icon/clear.png" alt="Temizle" className={styles.icon} />
+          Temizle
         </button>
       </div>
 
-      {/* 📄 FORM */}
-      <form
-        className={styles.form}
-        onSubmit={(e) => {
-          e.preventDefault();
-          alert("Form gönderildi!");
-        }}
-      >
-        <h2 className={styles.formTitle}>Kullanıcı Tanımlama</h2>
+      {/* FORM */}
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit, onError)}>
+        <h2 className={styles.formTitle}>HİSSE SENEDİ TANIMLAMA</h2>
 
-        {/* Ad ve Soyad yan yana */}
+        {/* KODU + ADI */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Ad</label>
-            <input type="text" name="ad" className={styles.input} value={formData.ad} onChange={handleChange} required />
-          </div>
-          <div className={styles.formGroupRow}>
-            <label className={styles.label}>Soyad</label>
-            <input type="text" name="soyad" className={styles.input} value={formData.soyad} onChange={handleChange} required />
-          </div>
-        </div>
-
-        {/* Kullanıcı Adı */}
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Kullanıcı Adı</label>
-          <input type="text" name="kullaniciAdi" className={styles.input} value={formData.kullaniciAdi} onChange={handleChange} required />
-        </div>
-
-        {/* E-posta ve Telefon yan yana */}
-        <div className={styles.row}>
-          <div className={styles.formGroupRow}>
-            <label className={styles.label}>E-posta</label>
-            <input type="email" name="email" className={styles.input} value={formData.email} onChange={handleChange} required />
-          </div>
-          <div className={styles.formGroupRow}>
-            <label className={styles.label}>Telefon Numarası</label>
-            <input type="tel" name="telefon" className={styles.input} value={formData.telefon} onChange={handleChange} required />
-          </div>
-        </div>
-
-        {/* Ünvan */}
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Ünvan</label>
-          <select name="unvan" className={styles.select} value={formData.unvan} onChange={handleChange} required>
-            <option value="" disabled>Ünvan Seçiniz</option>
-            <option value="muhendis">Mühendis</option>
-            <option value="uzman">Uzman</option>
-            <option value="yonetici">Yönetici</option>
-          </select>
-        </div>
-
-        {/* Yetki */}
-        <div className={styles.formGroup}>
-          <label className={styles.label}>Yetki</label>
-          <select name="yetki" className={styles.select} value={formData.yetki} onChange={handleChange} required>
-            <option value="" disabled>Yetki Seçiniz</option>
-            <option value="admin">Admin</option>
-            <option value="user">Kullanıcı</option>
-            <option value="manager">Yönetici</option>
-          </select>
-        </div>
-
-        <button type="submit" className={styles.submitButton}>Kaydet</button>
-      </form>
-
-      {/* 📋 Kullanıcı Listesi Bölümü */}
-      {showUsersTable && (
-        <div className={styles.userListContainer}>
-          {/* ✅ Başlık ve Arama */}
-          <div className={styles.userListHeader}>
-            <h3 className={styles.userListTitle}>Kullanıcı Listesi</h3>
+            <label className={styles.label}>Hisse Kodu*</label>
             <input
               type="text"
-              placeholder="Ara..."
-              className={styles.searchInput}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              {...register("kodu")}
+              className={styles.input}
+              onChange={(e) => setValue("kodu", e.target.value.toUpperCase())}
             />
           </div>
 
-          {/* ✅ Tablo */}
-          <table className={styles.userTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Ad</th>
-                <th>Soyad</th>
-                <th>Telefon</th>
-                <th>E-posta</th>
-                <th>Kullanıcı Adı</th>
-                <th>Ünvan</th>
-                <th>Yetki</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map(user => (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.ad}</td>
-                    <td>{user.soyad}</td>
-                    <td>{user.telefon}</td>
-                    <td>{user.email}</td>
-                    <td>{user.kullaniciAdi}</td>
-                    <td>{user.unvan}</td>
-                    <td>{user.yetki}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={8} className={styles.noData}>Kullanıcı bulunamadı.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <div className={styles.formGroupRow}>
+            <label className={styles.label}>Hisse Adı*</label>
+            <input
+              type="text"
+              {...register("adi")}
+              className={styles.input}
+            />
+          </div>
+        </div>
+
+        {/* ŞİRKET UNVANI */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Şirket Unvanı*</label>
+          <input
+            type="text"
+            {...register("sirketUnvani")}
+            className={styles.input}
+          />
+        </div>
+
+        {/* PAY PAZARI + BORSA */}
+        <div className={styles.row}>
+          <div className={styles.formGroupRow}>
+            <label className={styles.label}>Pay Piyasa Pazarı*</label>
+            <select {...register("payPazari")} className={styles.select}>
+              <option value="">Seçiniz</option>
+              <option value="yildiz">Yıldız Pazarı</option>
+              <option value="ana">Ana Pazar</option>
+              <option value="gelisen">Gelişen İşletmeler Pazarı</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroupRow}>
+            <label className={styles.label}>Borsa*</label>
+            <select {...register("borsa")} className={styles.select}>
+              <option value="">Seçiniz</option>
+              <option value="bist100">BIST 100</option>
+              <option value="bist50">BIST 50</option>
+              <option value="bist30">BIST 30</option>
+            </select>
+          </div>
+        </div>
+
+        {/* PARA BİRİMİ + ISIN KODU */}
+        <div className={styles.row}>
+          <div className={styles.formGroupRow}>
+            <label className={styles.label}>Para Birimi*</label>
+            <select {...register("paraBirimi")} className={styles.select}>
+              <option value="">Seçiniz</option>
+              <option value="TRY">TRY</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroupRow}>
+            <label className={styles.label}>ISIN Kodu*</label>
+            <input
+              type="text"
+              {...register("isinKodu")}
+              className={styles.input}
+            />
+          </div>
+        </div>
+        <button type="submit" className={styles.submitButton}>Kaydet</button>
+      </form>
+
+      {/* POPUP */}
+      {popup && (
+        <div
+          className={`${styles.popup} ${popup.type === "success" ? styles.popupSuccess : styles.popupError
+            }`}
+        >
+          {popup.message}
         </div>
       )}
-
     </div>
   );
 }
