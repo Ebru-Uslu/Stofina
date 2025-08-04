@@ -1,8 +1,7 @@
-
 .container {
   display: flex;
-  flex-direction: column; 
-  justify-content: flex-start; 
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
   margin-top: 25px;
@@ -16,14 +15,14 @@
   width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .formTitle {
   font-size: 25px;
   font-weight: 700;
   text-align: center;
-  color: #189345;;
+  color: #189345;
   margin-bottom: 15px;
 }
 
@@ -49,9 +48,16 @@
 .label {
   color: #868686;
   font-weight: 600;
+  font-size: 14px;
 }
 
-.input, .select {
+.required {
+  color: red;
+  margin-left: 4px;
+}
+
+.input,
+.select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
@@ -63,21 +69,23 @@
   padding-right: 10px;
 }
 
-.input:focus, .select:focus {
-  border-color: #813FB4;
+.input:focus,
+.select:focus {
+  border-color: #813fb4;
   box-shadow: 0 0 0 2px rgba(129, 63, 180, 0.2);
 }
 
 .submitButton {
   width: 300px;
-  background-color: #813FB4;
+  background-color: #813fb4;
   color: white;
   padding: 12px;
   border-radius: 8px;
   font-weight: 600;
   transition: background-color 0.3s;
   margin: 20px auto 0 auto;
-  display: block; 
+  display: block;
+  cursor: pointer;
 }
 
 .submitButton:hover {
@@ -86,10 +94,10 @@
 
 .topButtons {
   display: flex;
-  width: 600px;             
-  margin-bottom: 20px;       
-  gap: 12px;    
-  margin-left: -180px;             
+  width: 600px;
+  margin-bottom: 20px;
+  gap: 12px;
+  margin-left: -180px;
 }
 
 .secondaryButton {
@@ -144,7 +152,7 @@
 }
 
 .searchInput:focus {
-  border-color: #813FB4;
+  border-color: #813fb4;
   box-shadow: 0 0 0 2px rgba(129, 63, 180, 0.2);
   outline: none;
 }
@@ -155,7 +163,8 @@
   font-size: 14px;
 }
 
-.userTable th, .userTable td {
+.userTable th,
+.userTable td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
@@ -168,15 +177,48 @@
 }
 
 .userTable tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f6fff9;
 }
 
 .userTable tr:hover {
-  background-color: #f1e6ff;
+  background-color: #e8fcee;
 }
 
 .noData {
   text-align: center;
   color: #666;
   padding: 12px;
+}
+
+.popup {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+  color: white;
+  max-width: 300px;
+}
+
+.popupSuccess {
+  background-color: #4bb543;
+}
+
+.popupError {
+  background-color: #e74c3c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
