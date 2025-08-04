@@ -6,112 +6,9 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { customerType } from '@/constants/customerType';
-
+import { mockCustomers } from '@/types/customer';
 //TODO: Type klasöründe tanımlanacak
 
-
-const mockCustomers: Customer[] = [
-    {
-        id: 1,
-        name: 'Ahmet Yılmaz',
-        email: 'ahmet.yilmaz@example.com',
-        createdAt: new Date('2024-01-10T09:00:00Z'),
-        updatedAt: new Date('2024-06-15T12:00:00Z'),
-        accountNumber: 'TR12345678901',
-        tckn: '12345678901',
-        customerType: customerType.BIREYSEL,
-    },
-    {
-        id: 2,
-        name: 'Zeynep Korkmaz',
-        email: 'zeynep.korkmaz@example.com',
-        createdAt: new Date('2024-02-11T10:30:00Z'),
-        updatedAt: new Date('2024-06-20T09:15:00Z'),
-        accountNumber: 'TR98765432109',
-        tckn: '10987654321',
-        customerType: customerType.KURUMSAL,
-    },
-    {
-        id: 3,
-        name: 'Mehmet Demir',
-        email: 'mehmet.demir@example.com',
-        createdAt: new Date('2024-03-12T11:15:00Z'),
-        updatedAt: new Date('2024-06-18T14:20:00Z'),
-        accountNumber: 'TR11223344556',
-        tckn: '56789012345',
-        customerType: customerType.BIREYSEL,
-    },
-    {
-        id: 4,
-        name: 'Elif Yıldız',
-        email: 'elif.yildiz@example.com',
-        createdAt: new Date('2024-04-13T12:45:00Z'),
-        updatedAt: new Date('2024-06-25T16:00:00Z'),
-        accountNumber: 'TR45678912365',
-        tckn: '65432109876',
-        customerType: customerType.KURUMSAL,
-    },
-    {
-        id: 5,
-        name: 'Burcu Aydın',
-        email: 'burcu.aydin@example.com',
-        createdAt: new Date('2024-01-22T09:00:00Z'),
-        updatedAt: new Date('2024-07-01T10:00:00Z'),
-        accountNumber: 'TR32165498745',
-        tckn: '34567890123',
-        customerType: customerType.BIREYSEL,
-    },
-    {
-        id: 6,
-        name: 'Emre Şahin',
-        email: 'emre.sahin@example.com',
-        createdAt: new Date('2024-02-28T15:30:00Z'),
-        updatedAt: new Date('2024-07-10T09:45:00Z'),
-        accountNumber: 'TR15935748623',
-        tckn: '23456789012',
-        customerType: customerType.KURUMSAL,
-    },
-    {
-        id: 7,
-        name: 'Cem Kara',
-        email: 'cem.kara@example.com',
-        createdAt: new Date('2024-03-05T08:15:00Z'),
-        updatedAt: new Date('2024-07-12T11:30:00Z'),
-        accountNumber: 'TR75395145601',
-        tckn: '87654321098',
-        customerType: customerType.BIREYSEL,
-    },
-    {
-        id: 8,
-        name: 'Fatma Koç',
-        email: 'fatma.koc@example.com',
-        createdAt: new Date('2024-04-19T14:00:00Z'),
-        updatedAt: new Date('2024-07-15T13:00:00Z'),
-        accountNumber: 'TR14725836911',
-        tckn: '54321098765',
-        customerType: customerType.KURUMSAL,
-    },
-    {
-        id: 9,
-        name: 'Hakan Tuncel',
-        email: 'hakan.tuncel@example.com',
-        createdAt: new Date('2024-05-21T10:10:00Z'),
-        updatedAt: new Date('2024-07-20T12:30:00Z'),
-        accountNumber: 'TR36925814777',
-        tckn: '32109876543',
-        customerType: customerType.BIREYSEL,
-    },
-    {
-        id: 10,
-        name: 'Leyla Özkan',
-        email: 'leyla.ozkan@example.com',
-        createdAt: new Date('2024-06-01T09:00:00Z'),
-        updatedAt: new Date('2024-07-22T14:45:00Z'),
-        accountNumber: 'TR95175345688',
-        tckn: '21098765432',
-        customerType: customerType.BIREYSEL,
-    },
-];
 
 const AutoCompleteCustomerSearch = () => {
     const dispatch = useDispatchCustom();
@@ -125,6 +22,7 @@ const AutoCompleteCustomerSearch = () => {
 
 
     useEffect(() => { // arama yaparken 
+
         if (query.length < 2) {
             setFilteredCustomers([]);
             setShowDropdown(false);
@@ -132,8 +30,9 @@ const AutoCompleteCustomerSearch = () => {
         }
         const filteredCustomersByType = mockCustomers.filter((c) => c.customerType === selectedType);
         const filtered = filteredCustomersByType.filter((c) => // arama yaparken müşteri filtreleme
-            c.name.toLowerCase().includes(query.toLowerCase()) ||
-            c.accountNumber.includes(query)
+            c?.firstName?.toLowerCase().includes(query.toLowerCase()) ||
+            c?.tradeName?.toLowerCase().includes(query.toLowerCase()) ||
+            c?.accountNumber?.includes(query)
 
         );
 
@@ -143,7 +42,7 @@ const AutoCompleteCustomerSearch = () => {
 
     const handleCustomerSelect = (customer: Customer) => { // müşteri seçildiğinde
         dispatch(SliceCustomer.actions.setSelectedCustomer(customer));
-        setQuery('Müşteri Adı/Ticaret Unvanı: ' + customer.name);
+        setQuery('Müşteri Adı/Ticaret Unvanı: ' + customer.firstName);
         setShowDropdown(false);
         setFilteredCustomers([]);
     };
@@ -239,7 +138,7 @@ const AutoCompleteCustomerSearch = () => {
                                     <div className="grid grid-cols-4 ">
                                         <div className="flex col-span-2 gap-2">
                                             <span className="font-semibold text-gray-900 text-sm">Müşteri Adı / Ticaret Unvanı:</span>
-                                            <span className="text-gray-700 truncate">{customer.name}</span>
+                                            <span className="text-gray-700 truncate">{customer.firstName}</span>
                                         </div>
 
                                         <div className="flex gap-2">

@@ -30,7 +30,7 @@ export default function OrderTrackingTable() {
         console.log('Cancel order:', order);
         dispatch(SliceGlobalModal.actions.openModal({
             modalType: "warning",
-            message: selectedCustomer?.accountNumber + " hesap numaralı " + selectedCustomer?.name + " müşterisine ait " + order.orderNo + " numaralı emir işlemini iptal etmeyi onaylıyor musunuz? ",
+            message: selectedCustomer?.accountNumber + " hesap numaralı " + selectedCustomer?.firstName + " müşterisine ait " + order.orderNo + " numaralı emir işlemini iptal etmeyi onaylıyor musunuz? ",
             multipleButton: true
         }))
     };
@@ -89,7 +89,7 @@ export default function OrderTrackingTable() {
                         <th className="p-2">Hisse Senedi</th>
                         <th className="p-2">İşlem Türü</th>
                         <th className="p-2">Emir Tipi</th>
-                        <th className="p-2">Fiyat</th>
+                        <th className="p-2">Fiyat </th>
                         <th className="p-2">Adet</th>
                         <th className="p-2">Gerçekleşen Adet</th>
                         <th className="p-2">Gerçekleşen Fiyat</th>
@@ -105,10 +105,10 @@ export default function OrderTrackingTable() {
                             <td className="p-2">{order.symbol}</td>
                             <td className="p-2">{order.orderSide}</td>
                             <td className="p-2">{order.orderType}</td>
-                            <td className="p-2">{order.price.toFixed(2)}</td>
+                            <td className="p-2">{order.price.toFixed(2) + " TL"}</td>
                             <td className="p-2">{order.quantity}</td>
                             <td className="p-2">{order.filledQuantity}</td>
-                            <td className="p-2">{order.filledPrice.toFixed(2)}</td>
+                            <td className="p-2">{order.filledPrice.toFixed(2) + " TL"}</td>
                             <td className="p-2">
                                 <span className={
                                     order.status === 'GERÇEKLEŞTİ' ? 'font-bold text-green-600' :
@@ -138,28 +138,6 @@ export default function OrderTrackingTable() {
                     ))}
                 </tbody>
             </table>
-
-            {/* <div className="mt-8">
-                <h2 className="text-lg font-semibold mb-4 text-gray-800">Özet Bilgileri</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-blue-600">{summary.total}</div>
-                        <div className="text-sm text-blue-700 font-medium mt-1">Toplam Emir</div>
-                    </div>
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-green-600">{summary.filled}</div>
-                        <div className="text-sm text-green-700 font-medium mt-1">Gerçekleşen</div>
-                    </div>
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-yellow-600">{summary.open}</div>
-                        <div className="text-sm text-yellow-700 font-medium mt-1">Bekleyen</div>
-                    </div>
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-red-600">{summary.canceled}</div>
-                        <div className="text-sm text-red-700 font-medium mt-1">İptal Edilen</div>
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 import React from 'react'
-import styles from './StyleOrderTracking.module.css'
+import styles from '@/theme/common.module.css'
 import { useRouter } from "next/navigation";
 import AutoCompleteCustomerSearch from '@/components/common/AutoCompleteCustomerSearch';
 import OrderTrackingTable from '@/components/order-tracking/OrderTrackingTable';
