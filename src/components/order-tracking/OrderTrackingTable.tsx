@@ -31,7 +31,7 @@ export default function OrderTrackingTable() {
         dispatch(SliceGlobalModal.actions.openModal({
             modalType: "warning",
             message: selectedCustomer?.accountNumber + " hesap numaralı " + selectedCustomer?.firstName + " müşterisine ait " + order.orderNo + " numaralı emir işlemini iptal etmeyi onaylıyor musunuz? ",
-            multipleButton: true
+            multipleButtons: true
         }))
     };
     if (!selectedCustomer) {
