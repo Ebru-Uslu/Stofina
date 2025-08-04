@@ -55,10 +55,12 @@ const modalStyle = {
 
 const GlobalModal = () => {
     const dispatch = useDispatchCustom();
-    const { isOpen, modalType, message, title, multipleButtons } = useSelectorCustom((state) => state.globalModal);
+    const { isOpen, modalType, message, title, multipleButtons, modalAction } = useSelectorCustom((state) => state.globalModal);
 
     const handleConfirm = async () => {
-        await dispatch(SliceGlobalModal.actions.changeResultTrue());
+        if (modalAction) {
+            modalAction();
+        }
         dispatch(SliceGlobalModal.actions.closeModal());
     };
 

@@ -197,7 +197,7 @@
   padding: 12px 24px;
   border-radius: 10px;
   font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 9999;
   animation: fadeIn 0.3s ease;
   color: white;
@@ -217,6 +217,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

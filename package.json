@@ -185,6 +185,7 @@
     "lodash.merge": "^4.6.2",
     "lodash.once": "^4.1.1",
     "loose-envify": "^1.4.0",
+    "lucide-react": "^0.536.0",
     "magic-string": "^0.30.17",
     "math-intrinsics": "^1.1.0",
     "merge2": "^1.4.1",
@@ -316,6 +317,8 @@
   "description": "",
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "24.1.0"
   }
 }
