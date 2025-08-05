@@ -115,7 +115,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
                   >
                     Müşterimiz, imzalamış olduğu <strong>Sermaye Piyasası Araçları Alım Satıma Aracılık Çerçeve Sözleşmesi</strong> kapsamında;
                     hisse senedi yatırım hesabı açma, kapatma ve güncelleme, hesaplara kullanıcı tanımlama/kaldırma,
-                    müşteri bilgileri değişikliği, yasal yükümlülükler doğrultusunda yatırım hesabı bilgileri ve banka
+                    müşteri bilgileri değişikliği, yasal yükümlülükler doğrultusunda yatırım hesabı bilgileri ve
                     bakiyelerinin görüntülenmesi, takas yükümlülükleri kapsamında kullanılmasına onay verilmesi,
                     aracı kurum nezdinde hesabın açılması, MKK nezdinde hesabın kaydedilmesi ve ilgili kurumlarla
                     bilgi paylaşımı, KVKK kapsamında kişisel verilerinin işlenmesi ve aktarılması hususlarında
