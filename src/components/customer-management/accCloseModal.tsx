@@ -3,6 +3,7 @@ import { Customer } from '@/types/customer';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Button, FormControlLabel, Checkbox, Grid, Box, Typography, Divider, Alert } from '@mui/material';
 import { AlertTriangle } from 'lucide-react';
 import React from 'react'
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     open: boolean;
@@ -13,6 +14,8 @@ interface Props {
 }
 
 const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) => {
+    const { t } = useTranslation();
+
     const formatCurrency = (amount: number) => {
         return new Intl.NumberFormat('tr-TR', {
             style: 'currency',
@@ -25,17 +28,17 @@ const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) =>
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle sx={{ backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', gap: 1 }}>
                 <AlertTriangle className="w-6 h-6 text-red-500" />
-                <Typography variant="h6" fontWeight="bold">Hesap Kapatma Onayı</Typography>
+                <Typography variant="h6" fontWeight="bold">{t('customer.modals.closeAccount.title')}</Typography>
             </DialogTitle>
             <DialogContent dividers>
                 <Typography variant="body2" color="textSecondary" mb={2}>
-                    Aşağıdaki bilgileri doğrulayarak hesap kapatma işlemini onaylayın.
+                    {t('customer.modals.closeAccount.description')}
                 </Typography>
                 <Grid container spacing={2} >
                     <Grid size={{ xs: 12 }}>
                         <TextField
                             size="small"
-                            label="Müşteri Adı"
+                            label={t('customer.modals.closeAccount.form.customerName')}
                             fullWidth
                             value={customer.tradeName || `${customer.firstName} ${customer.lastName}`}
                             disabled
@@ -45,7 +48,7 @@ const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) =>
                     <Grid size={{ xs: 12 }}>
                         <TextField
                             size="small"
-                            label="Müşteri Numarası"
+                            label={t('customer.modals.closeAccount.form.customerNumber')}
                             fullWidth
                             value={customer.id}
                             disabled
@@ -55,7 +58,7 @@ const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) =>
                     <Grid size={{ xs: 12 }}>
                         <TextField
                             size="small"
-                            label="Hesap Numarası"
+                            label={t('customer.modals.closeAccount.form.accountNumber')}
                             fullWidth
                             value={account.accountNo}
                             disabled
@@ -77,12 +80,13 @@ const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) =>
                     }}
                 >
                     <Typography variant="body2" fontWeight="600" sx={{ mb: 1, color: '#92400e' }}>
-                        Uyarı:
+                        {t('customer.modals.closeAccount.warning.title')}
                     </Typography>
                     <Typography variant="body2" sx={{ color: '#92400e' }}>
-                        Bu hesapta portföy değeri <strong>{formatCurrency(account.portfolioValue || 0)}</strong> ve
-                        nakit bakiye <strong>{formatCurrency(account.balance || 0)}</strong> bulunmaktadır.
-                        Hesap kapatmadan önce bu bakiyelerin temizlenmesi SPK ve BİST düzenlemeleri gereği zorunludur.
+                        {t('customer.modals.closeAccount.warning.description', {
+                            portfolioValue: formatCurrency(account.portfolioValue || 0),
+                            balance: formatCurrency(account.balance || 0)
+                        })}
                     </Typography>
                 </Alert>
 
@@ -94,39 +98,32 @@ const AccCloseModal = ({ open, onClose, onSubmit, customer, account }: Props) =>
                     mt: 2
                 }}>
                     <Typography variant="subtitle2" fontWeight="600" sx={{ mb: 1, color: '#374151' }}>
-                        BİST/SPK/MKK Uyarısı:
+                        {t('customer.modals.closeAccount.regulations.title')}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                        Hesap kapatma işlemi sonrasında:
+                        {t('customer.modals.closeAccount.regulations.subtitle')}
                     </Typography>
                     <Box component="ul" sx={{ pl: 2, m: 0, listStyleType: 'disc' }}>
-                        <Typography component="li" variant="body2" color="text.secondary" sx={{ mb: 0.8 }}>
-                            Müşterinin tüm açık pozisyonları kapatılmalıdır
-                        </Typography>
-                        <Typography component="li" variant="body2" color="text.secondary" sx={{ mb: 0.8 }}>
-                            MKK nezdindeki menkul kıymetler transfer edilmelidir
-                        </Typography>
-                        <Typography component="li" variant="body2" color="text.secondary" sx={{ mb: 0.8 }}>
-                            Hesap kapatma formu müşteri tarafından imzalanmalıdır
-                        </Typography>
-                        <Typography component="li" variant="body2" color="text.secondary">
-                            Yasal bekleme süresi (30 gün) uygulanmalıdır
-                        </Typography>
+                        {(t('customer.modals.closeAccount.regulations.items', { returnObjects: true }) as string[]).map((item: string, index: number) => (
+                            <Typography key={index} component="li" variant="body2" color="text.secondary" sx={{ mb: 0.8 }}>
+                                {item}
+                            </Typography>
+                        ))}
                     </Box>
                 </Box>
 
                 <Divider sx={{ my: 2 }} />
 
                 <Typography variant="body2" color="error" align="center">
-                    Bu işlem geri alınamaz.
+                    {t('customer.modals.closeAccount.irreversible')}
                 </Typography>
             </DialogContent>
             <DialogActions sx={{ px: 3, py: 2 }}>
                 <Button variant="outlined" onClick={onClose} color="primary">
-                    Vazgeç
+                    {t('customer.modals.closeAccount.buttons.cancel')}
                 </Button>
                 <Button variant="contained" onClick={onSubmit} color="error">
-                    Hesabı Kapat
+                    {t('customer.modals.closeAccount.buttons.closeAccount')}
                 </Button>
             </DialogActions>
         </Dialog>

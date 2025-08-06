@@ -7,11 +7,13 @@ import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { customerType } from '@/constants/customerType';
 import { mockCustomers } from '@/types/customer';
+import { useTranslation } from 'react-i18next';
 //TODO: Type klasöründe tanımlanacak
 
 
 const AutoCompleteCustomerSearch = () => {
     const dispatch = useDispatchCustom();
+    const { t } = useTranslation();
 
     // Customer type selection state
     const [selectedType, setSelectedType] = useState<string>(customerType.BIREYSEL);
@@ -42,7 +44,7 @@ const AutoCompleteCustomerSearch = () => {
 
     const handleCustomerSelect = (customer: Customer) => { // müşteri seçildiğinde
         dispatch(SliceCustomer.actions.setSelectedCustomer(customer));
-        setQuery('Müşteri Adı/Ticaret Unvanı: ' + customer.firstName);
+        setQuery(t('customer.search.dropdown.selectedCustomer') + customer.firstName);
         setShowDropdown(false);
         setFilteredCustomers([]);
     };
@@ -74,7 +76,7 @@ const AutoCompleteCustomerSearch = () => {
                                 width={16}
                                 height={16}
                                 className="w-4 h-4"
-                            />  Bireysel</button>
+                            />  {t('customer.search.customerType.individual')}</button>
 
                         <button
                             type="button"
@@ -90,7 +92,7 @@ const AutoCompleteCustomerSearch = () => {
                                 width={16}
                                 height={16}
                                 className="w-4 h-4"
-                            />Kurumsal</button>
+                            />{t('customer.search.customerType.corporate')}</button>
                     </div>
                 </div>
 
@@ -102,7 +104,7 @@ const AutoCompleteCustomerSearch = () => {
                         </svg>
                         <input // arama kutusu
                             type="text"
-                            placeholder={customerType ? "İsim veya hesap numarası girin." : "Önce müşteri tipi seçin..."}
+                            placeholder={customerType ? t('customer.search.placeholder.enabled') : t('customer.search.placeholder.disabled')}
                             value={query}
                             disabled={!customerType}
                             onChange={(e) => {
@@ -137,12 +139,12 @@ const AutoCompleteCustomerSearch = () => {
                                 >
                                     <div className="grid grid-cols-4 ">
                                         <div className="flex col-span-2 gap-2">
-                                            <span className="font-semibold text-gray-900 text-sm">Müşteri Adı / Ticaret Unvanı:</span>
+                                            <span className="font-semibold text-gray-900 text-sm">{t('customer.search.dropdown.customerName')}</span>
                                             <span className="text-gray-700 truncate">{customer.firstName}</span>
                                         </div>
 
-                                        <div className="flex gap-2">
-                                            <span className="font-semibold text-gray-900 text-sm">Hesap No:</span>
+                                        <div className="flex gap-2 col-span-2">
+                                            <span className="font-semibold text-gray-900 text-sm">{t('customer.search.dropdown.accountNumber')}</span>
                                             <span className="text-gray-700">{customer.accountNumber}</span>
                                         </div>
                                     </div>

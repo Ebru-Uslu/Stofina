@@ -3,95 +3,98 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./KurumsalMüşteri.module.css";
+import { useTranslation } from 'react-i18next';
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-const schema = yup.object({
-  ticaretUnvani: yup
-    .string()
-    .required("Ticaret unvanı boş bırakılamaz.")
-    .min(3, "Ticaret unvanı en az 3 karakter olmalıdır.")
-    .max(100, "Ticaret unvanı en fazla 100 karakter olabilir."),
-
-  ticaretSicilNo: yup
-    .string()
-    .required("Ticaret sicil numarası boş bırakılamaz.")
-    .matches(/^[1-9]\d{4,9}$/, "Ticaret sicil numarası 5–10 haneli olmalı ve 0 ile başlamamalıdır."),
-
-  vergiNo: yup
-    .string()
-    .required("Vergi numarası boş bırakılamaz.")
-    .matches(/^\d{10}$/, "Vergi numarası 10 haneli olmalıdır."),
-
-  vergiDairesi: yup
-    .string()
-    .required("Vergi dairesi boş bırakılamaz.")
-    .min(5, "Vergi dairesi adı en az 5 karakter olmalıdır.")
-    .max(100, "Vergi dairesi adı en fazla 100 karakter olabilir."),
-
-  yasalAdres: yup
-    .string()
-    .required("Yasal adres boş bırakılamaz.")
-    .min(10, "Yasal adres en az 10 karakter olmalıdır.")
-    .max(300, "Yasal adres en fazla 300 karakter olabilir."),
-
-  yetkili: yup
-    .string()
-    .required("Yetkili adı boş bırakılamaz.")
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]{3,50}$/, "Yetkili adı yalnızca harf ve boşluk içerebilir (3–50 karakter)."),
-
-  yetkiliTckn: yup
-    .string()
-    .required("Yetkili TCKN boş bırakılamaz.")
-    .matches(/^[1-9]\d{10}$/, "Yetkili TCKN 11 haneli ve 0 ile başlamamalıdır."),
-
-  yetkiliTelefon: yup
-    .string()
-    .required("Yetkili telefon numarası boş bırakılamaz.")
-    .matches(/^[5]\d{9}$/, "Telefon numarası 5 ile başlamalı ve 10 haneli olmalıdır."),
-
-  yetkiliEmail: yup
-    .string()
-    .required("Yetkili e-posta boş bırakılamaz.")
-    .matches(/^[^\sçÇğĞıİöÖşŞüÜ]+@[^\sçÇğĞıİöÖşŞüÜ]+\.[^\sçÇğĞıİöÖşŞüÜ]+$/, "Geçerli bir e-posta adresi giriniz."),
-
-  uygunluk: yup.boolean().oneOf([true], "Uygunluk testini onaylamanız gerekmektedir."),
-  mkk: yup.boolean().oneOf([true], "MKK onayını vermeniz gerekmektedir."),
-  kvkk: yup.boolean().oneOf([true], "KVKK onayını vermeniz gerekmektedir."),
-
-  yetkiliOps: yup
-    .string()
-    .nullable()
-    .transform((value) => (value === "" ? null : value))
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]{3,50}$/, "Yetkili adı yalnızca harf ve boşluk içerebilir.")
-    .notRequired(),
-
-  yetkiliTcknOps: yup
-    .string()
-    .nullable()
-    .transform((value) => (value === "" ? null : value))
-    .matches(/^[1-9]\d{10}$/, "Yetkili TCKN 11 haneli ve 0 ile başlamamalıdır.")
-    .notRequired(),
-
-  yetkiliTelefonOps: yup
-    .string()
-    .nullable()
-    .transform((value) => (value === "" ? null : value))
-    .matches(/^[5]\d{9}$/, "Telefon numarası 5 ile başlamalı ve 10 haneli olmalıdır.")
-    .notRequired(),
-
-  yetkiliEmailOps: yup
-    .string()
-    .nullable()
-    .transform((value) => (value === "" ? null : value))
-    .matches(/^[^\sçÇğĞıİöÖşŞüÜ]+@[^\sçÇğĞıİöÖşŞüÜ]+\.[^\sçÇğĞıİöÖşŞüÜ]+$/, "Geçerli bir e-posta adresi giriniz.")
-    .notRequired(),
-}).required();
-
 export default function Page() {
   const router = useRouter();
+  const { t } = useTranslation();
+
+  // Yup schema'yı dinamik olarak oluştur
+  const schema = yup.object({
+    ticaretUnvani: yup
+      .string()
+      .required(t('customer.corporate.validation.tradeNameRequired'))
+      .min(3, t('customer.corporate.validation.tradeNameMin'))
+      .max(100, t('customer.corporate.validation.tradeNameMax')),
+
+    ticaretSicilNo: yup
+      .string()
+      .required(t('customer.corporate.validation.tradeRegistryRequired'))
+      .matches(/^[1-9]\d{4,9}$/, t('customer.corporate.validation.tradeRegistryFormat')),
+
+    vergiNo: yup
+      .string()
+      .required(t('customer.corporate.validation.taxNumberRequired'))
+      .matches(/^\d{10}$/, t('customer.corporate.validation.taxNumberFormat')),
+
+    vergiDairesi: yup
+      .string()
+      .required(t('customer.corporate.validation.taxOfficeRequired'))
+      .min(5, t('customer.corporate.validation.taxOfficeMin'))
+      .max(100, t('customer.corporate.validation.taxOfficeMax')),
+
+    yasalAdres: yup
+      .string()
+      .required(t('customer.corporate.validation.legalAddressRequired'))
+      .min(10, t('customer.corporate.validation.legalAddressMin'))
+      .max(300, t('customer.corporate.validation.legalAddressMax')),
+
+    yetkili: yup
+      .string()
+      .required(t('customer.corporate.validation.authorizedRequired'))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]{3,50}$/, t('customer.corporate.validation.authorizedFormat')),
+
+    yetkiliTckn: yup
+      .string()
+      .required(t('customer.corporate.validation.authorizedTcknRequired'))
+      .matches(/^[1-9]\d{10}$/, t('customer.corporate.validation.authorizedTcknFormat')),
+
+    yetkiliTelefon: yup
+      .string()
+      .required(t('customer.corporate.validation.authorizedPhoneRequired'))
+      .matches(/^[5]\d{9}$/, t('customer.corporate.validation.authorizedPhoneFormat')),
+
+    yetkiliEmail: yup
+      .string()
+      .required(t('customer.corporate.validation.authorizedEmailRequired'))
+      .matches(/^[^\sçÇğĞıİöÖşŞüÜ]+@[^\sçÇğĞıİöÖşŞüÜ]+\.[^\sçÇğĞıİöÖşŞüÜ]+$/, t('customer.corporate.validation.authorizedEmailFormat')),
+
+    uygunluk: yup.boolean().oneOf([true], t('customer.corporate.validation.suitabilityRequired')),
+    mkk: yup.boolean().oneOf([true], t('customer.corporate.validation.mkkRequired')),
+    kvkk: yup.boolean().oneOf([true], t('customer.corporate.validation.kvkkRequired')),
+
+    yetkiliOps: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]{3,50}$/, t('customer.corporate.validation.authorizedFormat'))
+      .notRequired(),
+
+    yetkiliTcknOps: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .matches(/^[1-9]\d{10}$/, t('customer.corporate.validation.authorizedTcknFormat'))
+      .notRequired(),
+
+    yetkiliTelefonOps: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .matches(/^[5]\d{9}$/, t('customer.corporate.validation.authorizedPhoneFormat'))
+      .notRequired(),
+
+    yetkiliEmailOps: yup
+      .string()
+      .nullable()
+      .transform((value) => (value === "" ? null : value))
+      .matches(/^[^\sçÇğĞıİöÖşŞüÜ]+@[^\sçÇğĞıİöÖşŞüÜ]+\.[^\sçÇğĞıİöÖşŞüÜ]+$/, t('customer.corporate.validation.authorizedEmailFormat'))
+      .notRequired(),
+  }).required();
 
   // ✅ Popup state
   const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -119,7 +122,7 @@ export default function Page() {
     }
   ];
 
- const filteredUsers = corporateUsers.filter(user =>
+  const filteredUsers = corporateUsers.filter(user =>
     Object.values(user).some(value =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
@@ -138,7 +141,7 @@ export default function Page() {
   };
 
   const onSubmit = (data: any) => {
-    showPopup("Kurumsal müşteri kaydı başarıyla gerçekleşti!", "success");
+    showPopup(t('customer.corporate.messages.success'), "success");
     reset();
   };
 
@@ -160,23 +163,23 @@ export default function Page() {
     const el = document.getElementById("corporateUserList");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
-  
+
   return (
     <div className={styles.container}>
       {/* TAB BUTTONS */}
       <div className={styles.tabContainer}>
-        <button className={styles.tabButton} onClick={() => router.push("/dashboard/bireysel")}>Bireysel</button>
-        <button className={`${styles.tabButton} ${styles.activeTab}`} onClick={() => router.push("/dashboard/kurumsal")}>Kurumsal</button>
+        <button className={styles.tabButton} onClick={() => router.push("/dashboard/bireysel")}>{t('customer.corporate.tabs.individual')}</button>
+        <button className={`${styles.tabButton} ${styles.activeTab}`} onClick={() => router.push("/dashboard/kurumsal")}>{t('customer.corporate.tabs.corporate')}</button>
       </div>
 
       {/* TOP BUTTONS */}
       <div className={styles.topButtons}>
         <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
-          <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} /> Geri
+          <img src="/menu-icon/back.png" alt={t('customer.corporate.buttons.back')} className={styles.icon} /> {t('customer.corporate.buttons.back')}
         </button>
 
         <button type="button" className={styles.secondaryButton} onClick={handleClear}>
-          <img src="/menu-icon/clear.png" alt="Temizle" className={styles.icon} /> Temizle
+          <img src="/menu-icon/clear.png" alt={t('customer.corporate.buttons.clear')} className={styles.icon} /> {t('customer.corporate.buttons.clear')}
         </button>
 
         <button
@@ -187,22 +190,22 @@ export default function Page() {
             setTimeout(() => scrollToUserList(), 100);
           }}
         >
-          <img src="/menu-icon/persons.png" alt="Listele" className={styles.icon} /> Kullanıcıları Listele
+          <img src="/menu-icon/persons.png" alt={t('customer.corporate.buttons.listUsers')} className={styles.icon} /> {t('customer.corporate.buttons.listUsers')}
         </button>
       </div>
 
       {/* ✅ FORM */}
       <form className={styles.form} noValidate onSubmit={handleSubmit(onSubmit, onError)}>
-        <h2 className={styles.formTitle}>KURUMSAL MÜŞTERİ TANIMLAMA</h2>
+        <h2 className={styles.formTitle}>{t('customer.corporate.title')}</h2>
 
         {/* 1. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Ticaret Unvanı *</label>
+            <label className={styles.label}>{t('customer.corporate.form.tradeName')} {t('customer.corporate.form.required')}</label>
             <input {...register("ticaretUnvani")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Ticaret Sicil No *</label>
+            <label className={styles.label}>{t('customer.corporate.form.tradeRegistryNo')} {t('customer.corporate.form.required')}</label>
             <input {...register("ticaretSicilNo")} className={styles.input} />
           </div>
         </div>
@@ -210,11 +213,11 @@ export default function Page() {
         {/* 2. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Vergi No (VKN) *</label>
+            <label className={styles.label}>{t('customer.corporate.form.taxNumber')} {t('customer.corporate.form.required')}</label>
             <input {...register("vergiNo")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Vergi Dairesi *</label>
+            <label className={styles.label}>{t('customer.corporate.form.taxOffice')} {t('customer.corporate.form.required')}</label>
             <input {...register("vergiDairesi")} className={styles.input} />
           </div>
         </div>
@@ -222,11 +225,11 @@ export default function Page() {
         {/* 3. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili *</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedPerson')} {t('customer.corporate.form.required')}</label>
             <input {...register("yetkili")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili (Opsiyonel)</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedPersonOptional')}</label>
             <input {...register("yetkiliOps")} className={styles.input} />
           </div>
         </div>
@@ -234,11 +237,11 @@ export default function Page() {
         {/* 4. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili TCKN *</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedTckn')} {t('customer.corporate.form.required')}</label>
             <input maxLength={11} {...register("yetkiliTckn")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili TCKN (Opsiyonel)</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedTcknOptional')}</label>
             <input maxLength={11} {...register("yetkiliTcknOps")} className={styles.input} />
           </div>
         </div>
@@ -246,11 +249,11 @@ export default function Page() {
         {/* 5. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili Telefon *</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedPhone')} {t('customer.corporate.form.required')}</label>
             <input maxLength={10} {...register("yetkiliTelefon")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili Telefon (Opsiyonel)</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedPhoneOptional')}</label>
             <input maxLength={10} {...register("yetkiliTelefonOps")} className={styles.input} />
           </div>
         </div>
@@ -258,38 +261,38 @@ export default function Page() {
         {/* 6. SATIR */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili E-posta *</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedEmail')} {t('customer.corporate.form.required')}</label>
             <input type="email" {...register("yetkiliEmail")} className={styles.input} />
           </div>
           <div className={styles.formGroupRow}>
-            <label className={styles.label}>Yetkili E-posta (Opsiyonel)</label>
+            <label className={styles.label}>{t('customer.corporate.form.authorizedEmailOptional')}</label>
             <input type="email" {...register("yetkiliEmailOps")} className={styles.input} />
           </div>
         </div>
 
         {/* YASAL ADRES */}
         <div className={styles.formGroup}>
-          <label className={styles.label}>Yasal Adres *</label>
+          <label className={styles.label}>{t('customer.corporate.form.legalAddress')} {t('customer.corporate.form.required')}</label>
           <textarea rows={3} {...register("yasalAdres")} className={styles.textarea} />
         </div>
 
         {/* ✅ CHECKBOXLAR */}
         <div className={styles.checkboxGroup}>
           <input type="checkbox" id="uygunluk" {...register("uygunluk")} />
-          <label htmlFor="uygunluk">UYGUNLUK TESTİ <span className={styles.required}>*</span></label>
+          <label htmlFor="uygunluk">{t('customer.corporate.form.suitabilityTest')} <span className={styles.required}>{t('customer.corporate.form.required')}</span></label>
         </div>
 
         <div className={styles.checkboxGroup}>
           <input type="checkbox" id="mkk" {...register("mkk")} />
-          <label htmlFor="mkk">MKK nezdinde kaydının yapılması ve bilgilerinin ilgili kurumlarla paylaşılmasına müşteri tarafından onay verilmiştir. <span className={styles.required}>*</span></label>
+          <label htmlFor="mkk">{t('customer.corporate.form.mkkText')} <span className={styles.required}>{t('customer.corporate.form.required')}</span></label>
         </div>
 
         <div className={styles.checkboxGroup}>
           <input type="checkbox" id="kvkk" {...register("kvkk")} />
-          <label htmlFor="kvkk">Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında hazırlanan aydınlatma metnini okudum, anladım ve onaylıyorum. <span className={styles.required}>*</span></label>
+          <label htmlFor="kvkk">{t('customer.corporate.form.kvkkText')} <span className={styles.required}>{t('customer.corporate.form.required')}</span></label>
         </div>
 
-        <button type="submit" className={styles.submitButton}>Kaydet</button>
+        <button type="submit" className={styles.submitButton}>{t('customer.corporate.buttons.save')}</button>
       </form>
 
       {/* ✅ POPUP */}
@@ -298,15 +301,15 @@ export default function Page() {
           {popup.message}
         </div>
       )}
-  
+
       {showUsersTable && (
         <div className={styles.userListContainer} id="corporateUserList">
           <div className={styles.userListHeader}>
-            <h3 className={styles.userListTitle}>Kurumsal Müşteri Listesi</h3>
+            <h3 className={styles.userListTitle}>{t('customer.corporate.userList.title')}</h3>
             <input
               type="text"
               value={searchTerm}
-              placeholder="Ticaret unvanı, yetkili veya VKN ara..."
+              placeholder={t('customer.corporate.userList.searchPlaceholder')}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
             />
@@ -315,12 +318,12 @@ export default function Page() {
           <table className={styles.userTable}>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Ticaret Unvanı</th>
-                <th>VKN</th>
-                <th>Yetkili</th>
-                <th>Yetkili Telefon</th>
-                <th>Yetkili E-posta</th>
+                <th>{t('customer.corporate.userList.headers.id')}</th>
+                <th>{t('customer.corporate.userList.headers.tradeName')}</th>
+                <th>{t('customer.corporate.userList.headers.vkn')}</th>
+                <th>{t('customer.corporate.userList.headers.authorizedPerson')}</th>
+                <th>{t('customer.corporate.userList.headers.authorizedPhone')}</th>
+                <th>{t('customer.corporate.userList.headers.authorizedEmail')}</th>
               </tr>
             </thead>
             <tbody>
@@ -338,7 +341,7 @@ export default function Page() {
               ) : (
                 <tr>
                   <td colSpan={6} className={styles.noData}>
-                    Müşteri bulunamadı.
+                    {t('customer.corporate.userList.noData')}
                   </td>
                 </tr>
               )}

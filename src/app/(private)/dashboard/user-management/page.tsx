@@ -1,41 +1,15 @@
 "use client";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "next-i18next";
 import styles from "./UserForm.module.css";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-// ✅ Validasyon şeması
-const schema = yup.object({
-  ad: yup
-    .string()
-    .required("Ad alanı zorunludur.")
-    .max(30, "Ad 30 karakterden uzun olamaz.")
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, "Ad sadece harflerden oluşmalıdır."),
-  soyad: yup
-    .string()
-    .required("Soyad alanı zorunludur.")
-    .max(30, "Soyad 30 karakterden uzun olamaz.")
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, "Soyad sadece harflerden oluşmalıdır."),
-  telefon: yup
-    .string()
-    .required("Telefon alanı zorunludur.")
-    .matches(/^[1-9]\d{9}$/, "Telefon 10 rakam olmalı ve 0 ile başlamamalı."),
-  email: yup
-    .string()
-    .required("E-posta alanı zorunludur.")
-    .email("Geçerli bir e-posta giriniz."),
-  kullaniciAdi: yup
-    .string()
-    .required("Kullanıcı adı zorunludur.")
-    .min(3, "Kullanıcı adı en az 3 karakter olmalı."),
-  unvan: yup.string().required("Ünvan seçimi zorunludur."),
-  yetki: yup.string().required("Yetki seçimi zorunludur."),
-}).required();
-
 export default function Page() {
+  const { t } = useTranslation("common");
   const router = useRouter();
 
   const [showUsersTable, setShowUsersTable] = useState(false);
@@ -61,6 +35,34 @@ export default function Page() {
     )
   );
 
+  // ✅ Validasyon şeması
+  const schema = yup.object({
+    ad: yup
+      .string()
+      .required(t("userManagement.messages.validationErrors.firstNameRequired"))
+      .max(30, t("userManagement.messages.validationErrors.firstNameMaxLength"))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, t("userManagement.messages.validationErrors.firstNameFormat")),
+    soyad: yup
+      .string()
+      .required(t("userManagement.messages.validationErrors.lastNameRequired"))
+      .max(30, t("userManagement.messages.validationErrors.lastNameMaxLength"))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, t("userManagement.messages.validationErrors.lastNameFormat")),
+    telefon: yup
+      .string()
+      .required(t("userManagement.messages.validationErrors.phoneRequired"))
+      .matches(/^[1-9]\d{9}$/, t("userManagement.messages.validationErrors.phoneFormat")),
+    email: yup
+      .string()
+      .required(t("userManagement.messages.validationErrors.emailRequired"))
+      .email(t("userManagement.messages.validationErrors.emailFormat")),
+    kullaniciAdi: yup
+      .string()
+      .required(t("userManagement.messages.validationErrors.usernameRequired"))
+      .min(3, t("userManagement.messages.validationErrors.usernameMinLength")),
+    unvan: yup.string().required(t("userManagement.messages.validationErrors.titleRequired")),
+    yetki: yup.string().required(t("userManagement.messages.validationErrors.authorityRequired")),
+  }).required();
+
   // ✅ React Hook Form kullanımı
   const {
     register,
@@ -80,7 +82,7 @@ export default function Page() {
 
   // ✅ Form başarılı gönderim
   const onSubmit = (data: any) => {
-    showPopup("Form başarıyla gönderildi!", "success");
+    showPopup(t("userManagement.messages.formSubmitted"), "success");
     reset();
   };
 
@@ -106,13 +108,13 @@ export default function Page() {
       {/* 🔝 ÜST BUTONLAR */}
       <div className={styles.topButtons}>
         <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
-          <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} />
-          Geri
+          <img src="/menu-icon/back.png" alt={t("common.back")} className={styles.icon} />
+          {t("common.back")}
         </button>
 
         <button type="button" className={styles.secondaryButton} onClick={handleClear}>
-          <img src="/menu-icon/clear.png" alt="Temizle" className={styles.icon} />
-          Temizle
+          <img src="/menu-icon/clear.png" alt={t("common.buttons.clear")} className={styles.icon} />
+          {t("common.buttons.clear")}
         </button>
 
         {/* ✅ Listele butonuna scroll ekledik */}
@@ -126,8 +128,8 @@ export default function Page() {
             }, 100);
           }}
         >
-          <img src="/menu-icon/persons.png" alt="Listele" className={styles.icon} />
-          Kullanıcıları Listele
+          <img src="/menu-icon/persons.png" alt={t("userManagement.buttons.listUsers")} className={styles.icon} />
+          {t("userManagement.buttons.listUsers")}
         </button>
       </div>
 
@@ -137,13 +139,13 @@ export default function Page() {
         onSubmit={handleSubmit(onSubmit, onError)}
         noValidate
       >
-        <h2 className={styles.formTitle}>KULLANICI TANIMLAMA</h2>
+        <h2 className={styles.formTitle}>{t("userManagement.title")}</h2>
 
         {/* Ad Soyad */}
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Ad <span className={styles.required}>*</span>
+              {t("userManagement.form.firstName")} <span className={styles.required}>{t("userManagement.form.required")}</span>
             </label>
             <input
               type="text"
@@ -153,7 +155,7 @@ export default function Page() {
           </div>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Soyad <span className={styles.required}>*</span>
+              {t("userManagement.form.lastName")} <span className={styles.required}>{t("userManagement.form.required")}</span>
             </label>
             <input
               type="text"
@@ -166,7 +168,7 @@ export default function Page() {
         {/* Kullanıcı Adı */}
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            Kullanıcı Adı <span className={styles.required}>*</span>
+            {t("userManagement.form.username")} <span className={styles.required}>{t("userManagement.form.required")}</span>
           </label>
           <input
             type="text"
@@ -179,7 +181,7 @@ export default function Page() {
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              E-posta <span className={styles.required}>*</span>
+              {t("userManagement.form.email")} <span className={styles.required}>{t("userManagement.form.required")}</span>
             </label>
             <input
               type="email"
@@ -189,7 +191,7 @@ export default function Page() {
           </div>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Telefon Numarası <span className={styles.required}>*</span>
+              {t("userManagement.form.phone")} <span className={styles.required}>{t("userManagement.form.required")}</span>
             </label>
             <input
               type="tel"
@@ -202,30 +204,30 @@ export default function Page() {
         {/* Ünvan */}
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            Ünvan <span className={styles.required}>*</span>
+            {t("userManagement.form.title")} <span className={styles.required}>{t("userManagement.form.required")}</span>
           </label>
           <select {...register("unvan")} className={styles.select} defaultValue="">
-            <option value="" disabled>Ünvan Seçiniz</option>
-            <option value="muhendis">Mühendis</option>
-            <option value="uzman">Uzman</option>
-            <option value="yonetici">Yönetici</option>
+            <option value="" disabled>{t("userManagement.form.titleSelect")}</option>
+            <option value="muhendis">{t("userManagement.form.titleOptions.engineer")}</option>
+            <option value="uzman">{t("userManagement.form.titleOptions.expert")}</option>
+            <option value="yonetici">{t("userManagement.form.titleOptions.manager")}</option>
           </select>
         </div>
 
         {/* Yetki */}
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            Yetki <span className={styles.required}>*</span>
+            {t("userManagement.form.authority")} <span className={styles.required}>{t("userManagement.form.required")}</span>
           </label>
           <select {...register("yetki")} className={styles.select} defaultValue="">
-            <option value="" disabled>Yetki Seçiniz</option>
-            <option value="admin">Admin</option>
-            <option value="user">Kullanıcı</option>
-            <option value="manager">Yönetici</option>
+            <option value="" disabled>{t("userManagement.form.authoritySelect")}</option>
+            <option value="admin">{t("userManagement.form.authorityOptions.admin")}</option>
+            <option value="user">{t("userManagement.form.authorityOptions.user")}</option>
+            <option value="manager">{t("userManagement.form.authorityOptions.manager")}</option>
           </select>
         </div>
 
-        <button type="submit" className={styles.submitButton}>Kaydet</button>
+        <button type="submit" className={styles.submitButton}>{t("userManagement.buttons.save")}</button>
       </form>
 
       {/* 🔔 Popup Mesajı */}
@@ -243,10 +245,10 @@ export default function Page() {
       {showUsersTable && (
         <div ref={tableRef} className={styles.userListContainer}>
           <div className={styles.userListHeader}>
-            <h3 className={styles.userListTitle}>Kullanıcı Listesi</h3>
+            <h3 className={styles.userListTitle}>{t("userManagement.userList.title")}</h3>
             <input
               type="text"
-              placeholder="Ara..."
+              placeholder={t("userManagement.userList.searchPlaceholder")}
               className={styles.searchInput}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -256,14 +258,14 @@ export default function Page() {
           <table className={styles.userTable}>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Ad</th>
-                <th>Soyad</th>
-                <th>Telefon</th>
-                <th>E-posta</th>
-                <th>Kullanıcı Adı</th>
-                <th>Ünvan</th>
-                <th>Yetki</th>
+                <th>{t("userManagement.userList.headers.id")}</th>
+                <th>{t("userManagement.userList.headers.firstName")}</th>
+                <th>{t("userManagement.userList.headers.lastName")}</th>
+                <th>{t("userManagement.userList.headers.phone")}</th>
+                <th>{t("userManagement.userList.headers.email")}</th>
+                <th>{t("userManagement.userList.headers.username")}</th>
+                <th>{t("userManagement.userList.headers.title")}</th>
+                <th>{t("userManagement.userList.headers.authority")}</th>
               </tr>
             </thead>
             <tbody>
@@ -282,7 +284,7 @@ export default function Page() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={8} className={styles.noData}>Kullanıcı bulunamadı.</td>
+                  <td colSpan={8} className={styles.noData}>{t("userManagement.userList.noData")}</td>
                 </tr>
               )}
             </tbody>

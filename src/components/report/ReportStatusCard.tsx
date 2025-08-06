@@ -1,15 +1,18 @@
 import React from 'react'
 import { CheckCircle, Clock, AlertCircle, Download } from 'lucide-react'
+import { useTranslation } from 'react-i18next';
 
-type Status = 'Hazır' | 'Bekleniyor' | 'Henüz Alınmadı';
+// type Status = 'Hazır' | 'Bekleniyor' | 'Henüz Alınmadı';
 
 interface ReportStatusCardProps {
     lastReportDate?: string;
-    status: Status;
+    status: string;
     onCloseReport?: () => void;
 }
 
 const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatusCardProps) => {
+
+    const { t } = useTranslation();
 
     const getStatusConfig = () => {
         switch (status) {
@@ -43,6 +46,17 @@ const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatu
         }
     };
 
+    const getStatusText = () => {
+        switch (status) {
+            case 'Hazır':
+                return t('report.statusCard.ready');
+            case 'Bekleniyor':
+                return t('report.statusCard.pending');
+            default:
+                return t('report.statusCard.notReady');
+        }
+    };
+
     const statusConfig = getStatusConfig();
     const StatusIcon = statusConfig.icon;
 
@@ -54,7 +68,7 @@ const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatu
             {/* Header */}
             <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-gray-800 font-bold text-lg">Rapor Durumu</h2>
+                    <h2 className="text-gray-800 font-bold text-lg">{t('report.statusCard.title')}</h2>
                     <div className={`p-2 rounded-full ${statusConfig.bgColor}`}>
                         <StatusIcon className={`w-5 h-5 ${statusConfig.iconColor}`} />
                     </div>
@@ -64,24 +78,22 @@ const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatu
                 <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${statusConfig.bgColor} border ${statusConfig.borderColor} mb-4`}>
                     <StatusIcon className={`w-4 h-4 ${statusConfig.iconColor}`} />
                     <span className={`text-sm font-semibold ${statusConfig.color}`}>
-                        {status === 'Hazır' ? 'Rapor Hazır' :
-                            status === 'Bekleniyor' ? 'Rapor Bekleniyor' :
-                                'Rapor Henüz Alınmadı'}
+                        {getStatusText()}
                     </span>
                 </div>
 
                 {/* Last Report Date */}
                 <div className="space-y-2">
                     <div className="flex items-center gap-2 text-gray-600">
-                        <span className="text-sm font-medium">Son Rapor:</span>
+                        <span className="text-sm font-medium">{t('report.statusCard.lastReport')}:</span>
                         <span className="text-sm font-semibold text-gray-800">
-                            {lastReportDate || 'Henüz Alınmadı'}
+                            {lastReportDate || t('report.statusCard.notReady')}
                         </span>
                     </div>
 
                     {lastReportDate && (
                         <div className="text-xs text-gray-500">
-                            Son güncelleme: {new Date().toLocaleDateString('tr-TR')}
+                            {t('report.statusCard.lastUpdate')}: {new Date().toLocaleDateString('tr-TR')}
                         </div>
                     )}
                 </div>
@@ -107,7 +119,7 @@ const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatu
                             className={`w-full cursor-pointer group/btn relative overflow-hidden bg-gradient-to-r ${statusConfig.gradient} text-white rounded-xl py-3 px-4 font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2`}
                         >
                             <Download className="w-4 h-4 group-hover/btn:animate-bounce" />
-                            <span>Raporu İndir</span>
+                            <span>{t('report.statusCard.download')}</span>
                             <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                         </button>
                     </div>
@@ -118,7 +130,7 @@ const ReportStatusCard = ({ lastReportDate, status, onCloseReport }: ReportStatu
                     <div className="mt-6">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-                            <span className="text-xs text-amber-600 font-medium">Rapor hazırlanıyor...</span>
+                            <span className="text-xs text-amber-600 font-medium">{t('report.statusCard.reportPreparing')}</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-1.5">
                             <div className="bg-gradient-to-r from-amber-400 to-amber-500 h-1.5 rounded-full animate-pulse" style={{ width: '60%' }} />

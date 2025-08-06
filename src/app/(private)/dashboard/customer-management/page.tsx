@@ -11,9 +11,11 @@ import AccCloseModal from '@/components/customer-management/accCloseModal';
 import { useDispatchCustom } from '@/hooks/useDispatchCustom';
 import { SliceGlobalModal } from '@/slice/common/sliceGlobalModal';
 import { Tooltip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const CustomerManagement = () => {
     const router = useRouter();
+    const { t } = useTranslation();
     const selectedCustomer = useSelectorCustom((state) => state.customer.selectedCustomer);
     const [newAccountModalOpen, setNewAccountModalOpen] = useState<boolean>(false);
     const [accCloseModalOpen, setAccCloseModalOpen] = useState<boolean>(false);
@@ -32,7 +34,7 @@ const CustomerManagement = () => {
     const handleCloseAccount = () => {
         dispatch(SliceGlobalModal.actions.openModal({
             modalType: "warning",
-            message: `${selectedCustomer?.firstName} müşterisine ait ${selectedAccount?.accountNo} numaralı hesap kapatma işlemini onaylıyor musunuz? `,
+            message: `${selectedCustomer?.firstName} ${t('customer.management.modal.closeAccountConfirmation')} ${selectedAccount?.accountNo}`,
             multipleButtons: true,
             modalAction: () => {
                 deleteAccount();
@@ -45,8 +47,8 @@ const CustomerManagement = () => {
         <div>
             <div className=' flex items-start mb-14'> {/* Geri butonu */}
                 <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
-                    <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} />
-                    Geri
+                    <img src="/menu-icon/back.png" alt={t('customer.management.buttons.back')} className={styles.icon} />
+                    {t('customer.management.buttons.back')}
                 </button>
 
                 <AutoCompleteCustomerSearch /> {/* Müşteri arama */}
@@ -58,7 +60,7 @@ const CustomerManagement = () => {
                         <svg className="w-4 h-4 ml-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                         </svg>
-                        <label className="text-sm font-medium text-gray-700">Seçtiğiniz müşteriye ait bütün hesaplar aşağıda listelenmektedir. Hesap ekleyebilir, kapatabilir ve düzenlemeleri yapabilirsiniz.</label>
+                        <label className="text-sm font-medium text-gray-700">{t('customer.management.description')}</label>
                     </div>
 
                     <button
@@ -71,7 +73,7 @@ const CustomerManagement = () => {
                         className=" w-60 cursor-pointer justify-center flex items-center gap-2 px-6 py-2 rounded-xl text-green-600 bg-green-500/10 hover:bg-green-500/20 font-semibold transition duration-300 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
                     >
                         <PlusCircle className="w-5 h-5" />
-                        <span>Yeni Hesap Ekle</span>
+                        <span>{t('customer.management.buttons.addNewAccount')}</span>
                     </button>
                     {selectedCustomer &&
                         <NewCustomerModal open={newAccountModalOpen} onClose={() => setNewAccountModalOpen(false)} onSubmit={() => { }} customer={selectedCustomer} />
@@ -86,13 +88,13 @@ const CustomerManagement = () => {
                 <table className="min-w-full border border-gray-300 rounded-md overflow-hidden text-sm">
                     <thead className="bg-gray-100">
                         <tr className="text-left">
-                            <th className="px-4 py-3">Hesap Numarası</th>
-                            <th className="px-4 py-3">Portföy Değeri</th>
-                            <th className="px-4 py-3">Bakiye</th>
-                            <th className="px-4 py-3">Son işlem Tarihi</th>
-                            <th className="px-4 py-3">Statü</th>
-                            <th className="px-4 py-3">Portföy Detayı</th>
-                            <th className="px-4 py-3">Hesap İşlemleri</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.accountNumber')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.portfolioValue')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.balance')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.lastTransactionDate')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.status')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.portfolioDetail')}</th>
+                            <th className="px-4 py-3">{t('customer.management.table.headers.accountOperations')}</th>
 
                         </tr>
                     </thead>
@@ -112,7 +114,7 @@ const CustomerManagement = () => {
                                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                         </svg>
-                                        Portföy
+                                        {t('customer.management.table.actions.portfolio')}
                                     </button>
                                 </td>
                                 <td className="p-2 px-4">
@@ -120,14 +122,14 @@ const CustomerManagement = () => {
                                         <button
                                             onClick={() => console.log('Hesap düzenleme:', account.accountNo)}
                                             className="group relative cursor-pointer inline-flex justify-center p-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-md hover:bg-gray-50 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-sm hover:shadow-md"
-                                            title="Hesap Düzenle"
-                                            aria-label="Hesap Düzenle"
+                                            title={t('customer.management.table.actions.editAccount')}
+                                            aria-label={t('customer.management.table.actions.editAccount')}
                                         >
                                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                             <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                                Düzenle
+                                                {t('customer.management.table.actions.edit')}
                                             </span>
                                         </button>
 
@@ -136,7 +138,7 @@ const CustomerManagement = () => {
                                         <Tooltip
                                             title={
                                                 (account.portfolioValue > 0 || account.balance > 0)
-                                                    ? "Bakiye bulunan hesaplar kapatılamaz."
+                                                    ? t('customer.management.table.tooltips.accountsWithBalanceCannotBeClosed')
                                                     : ""
                                             }
                                             arrow
@@ -154,15 +156,15 @@ const CustomerManagement = () => {
                                                         ? 'cursor-not-allowed text-gray-400 bg-gray-100 border border-gray-200'
                                                         : 'cursor-pointer text-red-600 bg-white border border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 hover:shadow-md'
                                                         }`}
-                                                    title="Hesap Kapat"
-                                                    aria-label="Hesap Kapat"
+                                                    title={t('customer.management.table.actions.closeAccount')}
+                                                    aria-label={t('customer.management.table.actions.closeAccount')}
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>
                                                     {!(account.portfolioValue > 0 || account.balance > 0) && (
                                                         <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                                                            Kapat
+                                                            {t('customer.management.table.actions.close')}
                                                         </span>
                                                     )}
                                                 </button>
@@ -182,7 +184,7 @@ const CustomerManagement = () => {
                         <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Toplam Hesap Sayısı</p>
+                                    <p className="text-sm font-medium text-gray-600">{t('customer.management.summary.totalAccounts')}</p>
                                     <p className="text-2xl font-bold text-gray-900 mt-1">{mockAccounts.length}</p>
                                 </div>
                                 <div className="p-3 bg-blue-100 rounded-full">
@@ -197,7 +199,7 @@ const CustomerManagement = () => {
                         <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Toplam Portföy Değeri</p>
+                                    <p className="text-sm font-medium text-gray-600">{t('customer.management.summary.totalPortfolioValue')}</p>
                                     <p className="text-2xl font-bold text-green-600 mt-1">
                                         {mockAccounts.reduce((sum, account) => sum + account.portfolioValue, 0).toLocaleString('tr-TR', {
                                             minimumFractionDigits: 2,
@@ -217,7 +219,7 @@ const CustomerManagement = () => {
                         <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600">Toplam Bakiye</p>
+                                    <p className="text-sm font-medium text-gray-600">{t('customer.management.summary.totalBalance')}</p>
                                     <p className="text-2xl font-bold text-purple-600 mt-1">
                                         {mockAccounts.reduce((sum, account) => sum + account.balance, 0).toLocaleString('tr-TR', {
                                             minimumFractionDigits: 2,
@@ -226,7 +228,7 @@ const CustomerManagement = () => {
                                     </p>
                                 </div>
                                 <div className="p-3 bg-purple-100 rounded-full">
-                                    <img src="/assets/icons/turkish-lira.png" alt="Geri" className={styles.icon} />
+                                    <img src="/assets/icons/turkish-lira.png" alt={t('customer.management.buttons.back')} className={styles.icon} />
                                 </div>
                             </div>
                         </div>
