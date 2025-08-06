@@ -1,7 +1,7 @@
 "use client";
 import { Quicksand } from "next/font/google";
 import { useSearchParams } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import axios from "axios";
 import styles from "./CreatePasswordPage.module.css";
 
@@ -20,13 +20,23 @@ export default function CreatePasswordPage() {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
-  const handleSubmit = async (e: FormEvent) => {
+  const validatePassword = (pwd: string) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,16}$/;
+    return re.test(pwd);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
     if (newPassword !== confirmPassword) {
       setError("Şifreler eşleşmiyor.");
+      return;
+    }
+
+    if (!validatePassword(newPassword)) {
+      setError("Lütfen geçerli bir şifre giriniz."); // istediğin hata mesajı
       return;
     }
 
@@ -87,6 +97,14 @@ export default function CreatePasswordPage() {
           <button type="submit" className={styles.submitButton}>
             Create
           </button>
+
+          <div className={styles.requirements}>
+            <p className={styles.requirementItem}>• 8-16 karakter</p>
+            <p className={styles.requirementItem}>• En az 1 büyük harf</p>
+            <p className={styles.requirementItem}>• En az 1 küçük harf</p>
+            <p className={styles.requirementItem}>• En az 1 rakam</p>
+            <p className={styles.requirementItem}>• En az 1 özel karakter (örn. !@#$%)</p>
+          </div>
 
           {error && <p className={`${styles.message} ${styles.error}`}>{error}</p>}
           {success && <p className={`${styles.message} ${styles.success}`}>{success}</p>}
