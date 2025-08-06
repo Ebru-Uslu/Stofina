@@ -30,7 +30,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { label: t('dashboard.menu.balanceAndStockManagement'), href: "/dashboard/stock-management", icon: "/menu-icon/balance.png" },
     { label: t('dashboard.menu.orderTracking'), href: "/dashboard/order-tracking", icon: "/menu-icon/order.png" },
     { label: t('dashboard.menu.reporting'), href: "/dashboard/report", icon: "/menu-icon/report.png" },
-    { label: t('dashboard.menu.userManagement'), href: "/dashboard/user-management", icon: "/menu-icon/portfolio.png" }
+    { label: t('dashboard.menu.userManagement'), href: "/dashboard/user-management", icon: "/menu-icon/portfolio.png" },
+    { label: t('dashboard.menu.transfer'), href: "/dashboard/transfer", icon: "/menu-icon/trade.png" }
   ];
 
   useEffect(() => {
@@ -95,7 +96,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Kullanıcı Dropdown İçeriği */}
             {isUserOpen && (
               <div className={styles.dropdownMenu}>
-
                 <button
                   className={styles.dropdownItem}
                   onClick={handleLogout}

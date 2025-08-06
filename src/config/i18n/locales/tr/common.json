@@ -42,6 +42,51 @@
         },
         "back": "Geri"
     },
+    "transfer": {
+        "title": "KIYMET VE PARA TRANSFERİ",
+        "transferSection": {
+            "title": "Transfer Türü",
+            "options": {
+                "accountsBetween": "HESAPLAR ARASI",
+                "customersBetween": "MÜŞTERİLER ARASI",
+                "institutionsBetween": "KURUMLAR ARASI",
+                "external": "HARİCİ"
+            }
+        },
+        "form": {
+            "transferType": {
+                "label": "Transfer Tipi",
+                "cash": "Nakit",
+                "stock": "Hisse Senedi"
+            },
+            "amount": {
+                "label": "Tutar",
+                "placeholder": "Tutar giriniz"
+            },
+            "stockCode": {
+                "label": "Hisse Kodu",
+                "placeholder": "Hisse kodu giriniz."
+            },
+            "quantity": {
+                "label": "Adet",
+                "placeholder": "Adet"
+            },
+            "transferDate": {
+                "label": "Gönderi Tarihi"
+            },
+            "senderAccount": {
+                "label": "Gönderici Hesap",
+                "placeholder": "Seçiniz"
+            },
+            "receiverAccount": {
+                "label": "Alıcı Hesap",
+                "placeholder": "Seçiniz"
+            }
+        },
+        "buttons": {
+            "startTransfer": "Transferi Başlat"
+        }
+    },
     "customerPortfolio": {
         "search": {
             "label": "Emir Ara",
@@ -616,7 +661,8 @@
             "balanceAndStockManagement": "Bakiye ve Stok Yönetimi",
             "orderTracking": "Emir Takip",
             "reporting": "Raporlama",
-            "userManagement": "Kullanıcı Yönetimi"
+            "userManagement": "Kullanıcı Yönetimi",
+            "transfer": "Kıymet ve Para Transferi"
         },
         "sidebar": {
             "search": {

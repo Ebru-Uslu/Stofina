@@ -42,6 +42,51 @@
         },
         "back": "Back"
     },
+    "transfer": {
+        "title": "ASSET AND MONEY TRANSFER",
+        "transferSection": {
+            "title": "Transfer Type",
+            "options": {
+                "accountsBetween": "BETWEEN ACCOUNTS",
+                "customersBetween": "BETWEEN CUSTOMERS",
+                "institutionsBetween": "BETWEEN INSTITUTIONS",
+                "external": "EXTERNAL"
+            }
+        },
+        "form": {
+            "transferType": {
+                "label": "Transfer Type",
+                "cash": "Cash",
+                "stock": "Stock"
+            },
+            "amount": {
+                "label": "Amount",
+                "placeholder": "Enter amount"
+            },
+            "stockCode": {
+                "label": "Stock Code",
+                "placeholder": "Enter stock code."
+            },
+            "quantity": {
+                "label": "Quantity",
+                "placeholder": "Quantity"
+            },
+            "transferDate": {
+                "label": "Transfer Date"
+            },
+            "senderAccount": {
+                "label": "Sender Account",
+                "placeholder": "Select"
+            },
+            "receiverAccount": {
+                "label": "Receiver Account",
+                "placeholder": "Select"
+            }
+        },
+        "buttons": {
+            "startTransfer": "Start Transfer"
+        }
+    },
     "customerPortfolio": {
         "search": {
             "label": "Search Orders",
@@ -617,7 +662,8 @@
             "balanceAndStockManagement": "Balance and Stock Management",
             "orderTracking": "Order Tracking",
             "reporting": "Reporting",
-            "userManagement": "User Management"
+            "userManagement": "User Management",
+            "transfer": "Asset and Money Transfer"
         },
         "sidebar": {
             "search": {

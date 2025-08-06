@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from 'next-i18next';
 import styles from "./KıymetTransferi.module.css";
 import SimpleCustomerSearch from "@/components/common/SimpleCustomerSearch";
 import TransferSection from '@/components/common/TransferSection';
@@ -16,6 +17,7 @@ const todayISODate = () => {
 };
 
 export default function TransferPage() {
+  const { t } = useTranslation("common");
   const [transferType, setTransferType] = useState<"NAKIT" | "HISSE">("NAKIT");
   const [transferCategory, setTransferCategory] = useState("HESAPLAR_ARASI");
   const [senderAccount, setSenderAccount] = useState("");
@@ -58,9 +60,10 @@ export default function TransferPage() {
   };
 
   return (
+
     <div className={styles.container}>
       {/* Sayfa Başlığı */}
-      <h2 className={styles.pageTitle}>KIYMET VE PARA TRANSFERİ</h2>
+      <h2 className={styles.pageTitle}>{t('transfer.title')}</h2>
 
       {/* Müşteri Arama Alanı */}
       <div className={styles.customerSearchWrapper}>
@@ -75,23 +78,23 @@ export default function TransferPage() {
 
           {/* Transfer Tipi */}
           <div className={styles.formGroup}>
-            <label>Transfer Tipi</label>
+            <label>{t('transfer.form.transferType.label')}</label>
             <select
               value={transferType}
               onChange={(e) => setTransferType(e.target.value as "NAKIT" | "HISSE")}
             >
-              <option value="NAKIT">Nakit</option>
-              <option value="HISSE">Hisse Senedi</option>
+              <option value="NAKIT">{t('transfer.form.transferType.cash')}</option>
+              <option value="HISSE">{t('transfer.form.transferType.stock')}</option>
             </select>
           </div>
 
           {/* Dinamik Alanlar */}
           {transferType === "NAKIT" ? (
             <div className={styles.formGroup}>
-              <label>Tutar</label>
+              <label>{t('transfer.form.amount.label')}</label>
               <input
                 type="number"
-                placeholder="Tutar giriniz"
+                placeholder={t('transfer.form.amount.placeholder')}
                 value={amount === "" ? "" : amount}
                 onChange={(e) => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
               />
@@ -99,28 +102,28 @@ export default function TransferPage() {
           ) : (
             <>
               <div className={styles.formGroup}>
-                <label>Hisse Kodu</label>
+                <label>{t('transfer.form.stockCode.label')}</label>
                 <input
                   type="text"
-                  placeholder="Hisse kodu giriniz."
+                  placeholder={t('transfer.form.stockCode.placeholder')}
                   value={stockCode}
                   onChange={(e) => setStockCode(e.target.value)}
                 />
               </div>
               <div className={styles.formGroup}>
-                <label>Adet</label>
+                <label>{t('transfer.form.quantity.label')}</label>
                 <input
                   type="number"
-                  placeholder="Adet"
+                  placeholder={t('transfer.form.quantity.placeholder')}
                   value={quantity === "" ? "" : quantity}
                   onChange={(e) => setQuantity(e.target.value === "" ? "" : Number(e.target.value))}
                 />
               </div>
               <div className={styles.formGroup}>
-                <label>Tutar</label>
+                <label>{t('transfer.form.amount.label')}</label>
                 <input
                   type="number"
-                  placeholder="Tutar giriniz"
+                  placeholder={t('transfer.form.amount.placeholder')}
                   value={amount === "" ? "" : amount}
                   onChange={(e) => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
                 />
@@ -133,7 +136,7 @@ export default function TransferPage() {
         <div className={styles.accountSection}>
           {/* Gönderi Tarihi */}
           <div className={styles.formGroup}>
-            <label>Gönderi Tarihi</label>
+            <label>{t('transfer.form.transferDate.label')}</label>
             <input
               type="date"
               value={transferDate}
@@ -143,9 +146,9 @@ export default function TransferPage() {
 
           {/* Gönderici Hesap */}
           <div className={styles.formGroup}>
-            <label>Gönderici Hesap</label>
+            <label>{t('transfer.form.senderAccount.label')}</label>
             <select value={senderAccount} onChange={handleSenderChange}>
-              <option value="">Seçiniz</option>
+              <option value="">{t('transfer.form.senderAccount.placeholder')}</option>
               {mockAccounts.map((acc, idx) => (
                 <option key={idx} value={acc}>
                   {acc}
@@ -156,13 +159,13 @@ export default function TransferPage() {
 
           {/* Alıcı Hesap (controlled) */}
           <div className={styles.formGroup}>
-            <label>Alıcı Hesap</label>
+            <label>{t('transfer.form.receiverAccount.label')}</label>
             <select
               value={receiverAccountSelected}
               onChange={(e) => setReceiverAccountSelected(e.target.value)}
               disabled={receiverAccounts.length === 0}
             >
-              <option value="">Seçiniz</option>
+              <option value="">{t('transfer.form.receiverAccount.placeholder')}</option>
               {receiverAccounts.map((acc, idx) => (
                 <option key={idx} value={acc}>
                   {acc}
@@ -171,7 +174,7 @@ export default function TransferPage() {
             </select>
           </div>
 
-          <button className={styles.submitButton} onClick={handleSubmit}>Transferi Başlat</button>
+          <button className={styles.submitButton} onClick={handleSubmit}>{t('transfer.buttons.startTransfer')}</button>
         </div>
       </div>
     </div>
