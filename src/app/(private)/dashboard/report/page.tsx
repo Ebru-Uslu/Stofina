@@ -5,8 +5,10 @@ import styles from '@/theme/common.module.css'
 import { useRouter } from 'next/navigation';
 import ReportStatusCard from '@/components/report/ReportStatusCard';
 import EndOfDayReportCard from '@/components/report/EndOfDayReportCard';
+import { useTranslation } from 'react-i18next';
 
 const Page = () => {
+    const { t } = useTranslation();
     const router = useRouter();
     const [reportReady, setReportReady] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +43,8 @@ const Page = () => {
         <div>
             <div className=' flex items-start mb-6'> {/* Geri butonu */}
                 <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
-                    <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} />
-                    Geri
+                    <img src="/menu-icon/back.png" alt={t('report.back')} className={styles.icon} />
+                    {t('common.back')}
                 </button>
             </div>
             <div className='flex gap-6 items-center'>
@@ -56,12 +58,12 @@ const Page = () => {
                     </div>
 
                     {isLoading ? (
-                        <ReportStatusCard status="Bekleniyor" />
+                        <ReportStatusCard status={t('report.status.pending')} />
                     ) : !reportReady ? (
-                        <ReportStatusCard status="Henüz Alınmadı" />
+                        <ReportStatusCard status={t('report.status.notReady')} />
                     ) : (
                         <ReportStatusCard
-                            status="Hazır"
+                            status={t('report.status.ready')}
                             onCloseReport={() => setReportReady(false)}
                         />
                     )}
@@ -72,8 +74,8 @@ const Page = () => {
                             <EndOfDayReportCard
                                 date={systemDate.toLocaleDateString()}
                                 time={new Date().toLocaleTimeString()}
-                                type="GÜN SONU"
-                                statusMessage="Gün içi emirler borsa emir defteriyle uyumluluğu kontrol edildi. Tarih kapanış saatinden sonraki gün için hazırlandı."
+                                type={t('report.type.endOfDay')}
+                                statusMessage={t('report.statusMessage')}
                                 onConfirm={handleConfirmReport}
                                 onPrint={handlePrintReport}
                             />

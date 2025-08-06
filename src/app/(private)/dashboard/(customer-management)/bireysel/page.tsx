@@ -3,45 +3,48 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./BireyselMüşteri.module.css";
+import { useTranslation } from 'react-i18next';
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-const schema = yup.object({
-  tckn: yup
-    .string()
-    .required("Lütfen T.C. Kimlik Numaranızı giriniz.")
-    .matches(/^\d{11}$/, "T.C. Kimlik Numaranız 11 rakamdan oluşmalıdır."),
-  ad: yup
-    .string()
-    .required("Lütfen adınızı yazınız.")
-    .max(30, "Adınız 30 karakterden uzun olamaz.")
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, "Adınızda sadece harfler olabilir."),
-  soyad: yup
-    .string()
-    .required("Lütfen soyadınızı yazınız.")
-    .max(30, "Soyadınız 30 karakterden uzun olamaz.")
-    .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, "Soyadınızda sadece harfler olabilir."),
-  email: yup
-    .string()
-    .required("Lütfen geçerli bir e-posta adresi giriniz.")
-    .email("Geçerli bir e-posta adresi giriniz."),
-  telefon: yup
-    .string()
-    .required("Lütfen telefon numaranızı giriniz.")
-    .matches(/^[1-9]\d{9}$/, "Telefon numaranız 10 rakamdan oluşmalı ve 0 ile başlamamalıdır."),
-  adres: yup
-    .string()
-    .required("Lütfen adresinizi giriniz.")
-    .max(400, "Adresiniz 400 karakterden uzun olamaz."),
-  uygunluk: yup.boolean().oneOf([true], "Uygunluk testini onaylamanız gerekmektedir."),
-  kvkk: yup.boolean().oneOf([true], "KVKK onayını vermeniz gerekmektedir."),
-  mkk: yup.boolean().oneOf([true], "MKK onayını vermeniz gerekmektedir."),
-}).required();
-
 export default function Page() {
   const router = useRouter();
+  const { t } = useTranslation();
+
+  // Yup schema'yı dinamik olarak oluştur
+  const schema = yup.object({
+    tckn: yup
+      .string()
+      .required(t('customer.validation.tcknRequired'))
+      .matches(/^\d{11}$/, t('customer.validation.tcknFormat')),
+    ad: yup
+      .string()
+      .required(t('customer.validation.nameRequired'))
+      .max(30, t('customer.validation.nameMaxLength'))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, t('customer.validation.nameFormat')),
+    soyad: yup
+      .string()
+      .required(t('customer.validation.surnameRequired'))
+      .max(30, t('customer.validation.surnameMaxLength'))
+      .matches(/^[a-zA-ZçğıöşüÇĞİÖŞÜ\s]+$/, t('customer.validation.surnameFormat')),
+    email: yup
+      .string()
+      .required(t('customer.validation.email'))
+      .email(t('customer.validation.email')),
+    telefon: yup
+      .string()
+      .required(t('customer.validation.phoneRequired'))
+      .matches(/^[1-9]\d{9}$/, t('customer.validation.phoneFormat')),
+    adres: yup
+      .string()
+      .required(t('customer.validation.addressRequired'))
+      .max(400, t('customer.validation.addressMaxLength')),
+    uygunluk: yup.boolean().oneOf([true], t('customer.validation.suitabilityRequired')),
+    kvkk: yup.boolean().oneOf([true], t('customer.validation.kvkkRequired')),
+    mkk: yup.boolean().oneOf([true], t('customer.validation.mkkRequired')),
+  }).required();
 
   // Popup state
   const [popup, setPopup] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -79,7 +82,7 @@ export default function Page() {
   };
 
   const onSubmit = (data: any) => {
-    showPopup("Müşteri kaydı başarıyla gerçekleşti!", "success");
+    showPopup(t('customer.individual.messages.success'), "success");
     reset();
   };
 
@@ -111,26 +114,26 @@ export default function Page() {
           onClick={() => router.push("/dashboard/bireysel")}
           disabled
         >
-          Bireysel
+          {t('customer.individual.tabs.individual')}
         </button>
         <button
           className={styles.tabButton}
           onClick={() => router.push("/dashboard/kurumsal")}
         >
-          Kurumsal
+          {t('customer.individual.tabs.corporate')}
         </button>
       </div>
 
       {/* ÜST BUTONLAR */}
       <div className={styles.topButtons}>
         <button type="button" className={styles.secondaryButton} onClick={() => router.back()}>
-          <img src="/menu-icon/back.png" alt="Geri" className={styles.icon} />
-          Geri
+          <img src="/menu-icon/back.png" alt={t('customer.individual.buttons.back')} className={styles.icon} />
+          {t('customer.individual.buttons.back')}
         </button>
 
         <button type="button" className={styles.secondaryButton} onClick={handleClear}>
-          <img src="/menu-icon/clear.png" alt="Temizle" className={styles.icon} />
-          Temizle
+          <img src="/menu-icon/clear.png" alt={t('customer.individual.buttons.clear')} className={styles.icon} />
+          {t('customer.individual.buttons.clear')}
         </button>
 
         <button
@@ -141,8 +144,8 @@ export default function Page() {
             setTimeout(() => scrollToUserList(), 100);
           }}
         >
-          <img src="/menu-icon/persons.png" alt="Listele" className={styles.icon} />
-          Kullanıcıları Listele
+          <img src="/menu-icon/persons.png" alt={t('customer.individual.buttons.listUsers')} className={styles.icon} />
+          {t('customer.individual.buttons.listUsers')}
         </button>
       </div>
 
@@ -152,12 +155,12 @@ export default function Page() {
         noValidate
         onSubmit={handleSubmit(onSubmit, onError)}
       >
-        <h2 className={styles.formTitle}>BİREYSEL MÜŞTERİ TANIMLAMA</h2>
+        <h2 className={styles.formTitle}>{t('customer.individual.title')}</h2>
 
         {/* TCKN */}
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            T.C. Kimlik No <span className={styles.required}>*</span>
+            {t('customer.individual.form.tckn')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
           </label>
           <input
             type="text"
@@ -171,7 +174,7 @@ export default function Page() {
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Ad <span className={styles.required}>*</span>
+              {t('customer.individual.form.firstName')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </label>
             <input
               type="text"
@@ -182,7 +185,7 @@ export default function Page() {
           </div>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Soyad <span className={styles.required}>*</span>
+              {t('customer.individual.form.lastName')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </label>
             <input
               type="text"
@@ -197,7 +200,7 @@ export default function Page() {
         <div className={styles.row}>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              E-posta <span className={styles.required}>*</span>
+              {t('customer.individual.form.email')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </label>
             <input
               type="email"
@@ -207,7 +210,7 @@ export default function Page() {
           </div>
           <div className={styles.formGroupRow}>
             <label className={styles.label}>
-              Telefon <span className={styles.required}>*</span>
+              {t('customer.individual.form.phone')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </label>
             <input
               type="text"
@@ -221,7 +224,7 @@ export default function Page() {
         {/* Adres */}
         <div className={styles.formGroup}>
           <label className={styles.label}>
-            Adres <span className={styles.required}>*</span>
+            {t('customer.individual.form.address')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
           </label>
           <textarea
             rows={3}
@@ -235,7 +238,7 @@ export default function Page() {
         <div className={styles.checkboxGroup}>
           <input type="checkbox" id="uygunluk" {...register("uygunluk")} />
           <label htmlFor="uygunluk" className={styles.uygunlukLabel}>
-            UYGUNLUK TESTİ <span className={styles.required}>*</span>
+            {t('customer.individual.form.suitabilityTest')} <span className={styles.required}>{t('customer.individual.form.required')}</span>
           </label>
         </div>
 
@@ -243,8 +246,8 @@ export default function Page() {
           <input type="checkbox" id="kvkk" {...register("kvkk")} />
           <label htmlFor="kvkk">
             <a href="/kvkk-aydinlatma.pdf" target="_blank" rel="noopener noreferrer">
-              Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında hazırlanan aydınlatma metni müşteri tarafından okunmuş ve onaylanmıştır. 
-              <span className={styles.required}>*</span>
+              {t('customer.individual.form.kvkkText')}
+              <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </a>
           </label>
         </div>
@@ -253,23 +256,22 @@ export default function Page() {
           <input type="checkbox" id="mkk" {...register("mkk")} />
           <label htmlFor="mkk">
             <a href="/mkk-onay-metni.pdf" target="_blank" rel="noopener noreferrer">
-              MKK nezdinde kaydının yapılması ve bilgilerinin ilgili kurumlarla paylaşılmasına müşteri tarafından onay verilmiştir.
-              <span className={styles.required}>*</span>
+              {t('customer.individual.form.mkkText')}
+              <span className={styles.required}>{t('customer.individual.form.required')}</span>
             </a>
           </label>
         </div>
 
         <button type="submit" className={styles.submitButton}>
-          Kaydet
+          {t('customer.individual.buttons.save')}
         </button>
       </form>
 
       {/* Popup */}
       {popup && (
         <div
-          className={`${styles.popup} ${
-            popup.type === "success" ? styles.popupSuccess : styles.popupError
-          }`}
+          className={`${styles.popup} ${popup.type === "success" ? styles.popupSuccess : styles.popupError
+            }`}
           role="alert"
           aria-live="assertive"
         >
@@ -281,11 +283,11 @@ export default function Page() {
       {showUsersTable && (
         <div className={styles.userListContainer} id="userListSection">
           <div className={styles.userListHeader}>
-            <h3 className={styles.userListTitle}>Kullanıcı Listesi</h3>
+            <h3 className={styles.userListTitle}>{t('customer.individual.userList.title')}</h3>
             <input
               type="text"
               value={searchTerm}
-              placeholder="İsim, telefon veya e-posta ara..."
+              placeholder={t('customer.individual.userList.searchPlaceholder')}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
             />
@@ -294,12 +296,12 @@ export default function Page() {
           <table className={styles.userTable}>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Ad</th>
-                <th>Soyad</th>
-                <th>Telefon</th>
-                <th>E-posta</th>
-                <th>Adres</th>
+                <th>{t('customer.individual.userList.headers.id')}</th>
+                <th>{t('customer.individual.userList.headers.firstName')}</th>
+                <th>{t('customer.individual.userList.headers.lastName')}</th>
+                <th>{t('customer.individual.userList.headers.phone')}</th>
+                <th>{t('customer.individual.userList.headers.email')}</th>
+                <th>{t('customer.individual.userList.headers.address')}</th>
               </tr>
             </thead>
             <tbody>
@@ -317,7 +319,7 @@ export default function Page() {
               ) : (
                 <tr>
                   <td colSpan={6} className={styles.noData}>
-                    Kullanıcı bulunamadı.
+                    {t('customer.individual.userList.noData')}
                   </td>
                 </tr>
               )}

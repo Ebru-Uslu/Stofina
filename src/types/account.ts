@@ -56,25 +56,5 @@ export const mockAccounts: Account[] = [
         lastTransactionDate: new Date("2025-08-01T15:00:00"),
         status: "AKTİF",
     },
-    {
-        accountNo: "TR1000000008",
-        portfolioValue: 32000.00,
-        balance: 18000.00,
-        lastTransactionDate: new Date("2025-07-26T17:40:00"),
-        status: "PASİF",
-    },
-    {
-        accountNo: "TR1000000009",
-        portfolioValue: 67500.00,
-        balance: 40000.00,
-        lastTransactionDate: new Date("2025-07-24T10:05:00"),
-        status: "PASİF",
-    },
-    {
-        accountNo: "TR1000000010",
-        portfolioValue: 88000.00,
-        balance: 50000.00,
-        lastTransactionDate: new Date("2025-07-30T12:20:00"),
-        status: "PASİF",
-    },
+
 ]

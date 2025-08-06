@@ -6,6 +6,7 @@ import { customerType } from '@/constants/customerType';
 import { SliceGlobalModal } from '@/slice/common/sliceGlobalModal';
 import { setSelectedCustomer } from '@/slice/CustomerSlice';
 import { useDispatchCustom } from '@/hooks/useDispatchCustom';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   open: boolean;
@@ -16,6 +17,7 @@ interface Props {
 
 export default function NewCustomerModal({ open, onClose, onSubmit, customer }: Props) {
   const dispatch = useDispatchCustom();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     customerId: customer.id,
     initialBalance: '',
@@ -31,7 +33,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
   const handleSubmit = () => {
     dispatch(SliceGlobalModal.actions.openModal({
       modalType: "info",
-      message: `${customer?.firstName + " " + customer?.lastName} müşterisine ait hesap açma işlemini onaylıyor musunuz? `,
+      message: `${customer?.firstName + " " + customer?.lastName} ${t('customer.modals.newAccount.messages.accountOpeningConfirmation')}`,
       multipleButtons: true,
       modalAction: () => {
         onSubmit(formData);
@@ -41,12 +43,12 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Yeni Hesap Ekle</DialogTitle>
+      <DialogTitle>{t('customer.modals.newAccount.title')}</DialogTitle>
       <DialogContent dividers>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField
             size="small"
-            label="Müşteri Numarası"
+            label={t('customer.modals.newAccount.form.customerNumber')}
             fullWidth
             value={customer.id || ""}
             disabled
@@ -54,7 +56,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
 
           {customer.customerType === customerType.BIREYSEL ? <TextField
             size="small"
-            label="Ad Soyad"
+            label={t('customer.modals.newAccount.form.fullName')}
             fullWidth
             value={customer.firstName + " " + customer.lastName}
             disabled
@@ -62,13 +64,13 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
             (<>
               <TextField
                 size="small"
-                label="Ticaret Unvanı"
+                label={t('customer.modals.newAccount.form.tradeName')}
                 fullWidth
                 value={customer.tradeName}
                 disabled
               />
               <TextField
-                label="VKN"
+                label={t('customer.modals.newAccount.form.vkn')}
                 fullWidth
                 value={customer.vkn}
                 disabled
@@ -76,7 +78,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
             </>)}
           <TextField
             size="small"
-            label="Hesap Açılış Tarihi"
+            label={t('customer.modals.newAccount.form.accountOpeningDate')}
             type="text"
             fullWidth
             value={formData.openingDate.toLocaleDateString('tr-TR', {
@@ -113,13 +115,19 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
                       textAlign: 'justify'
                     }}
                   >
-                    Müşterimiz, imzalamış olduğu <strong>Sermaye Piyasası Araçları Alım Satıma Aracılık Çerçeve Sözleşmesi</strong> kapsamında;
-                    hisse senedi yatırım hesabı açma, kapatma ve güncelleme, hesaplara kullanıcı tanımlama/kaldırma,
-                    müşteri bilgileri değişikliği, yasal yükümlülükler doğrultusunda yatırım hesabı bilgileri ve
-                    bakiyelerinin görüntülenmesi, takas yükümlülükleri kapsamında kullanılmasına onay verilmesi,
-                    aracı kurum nezdinde hesabın açılması, MKK nezdinde hesabın kaydedilmesi ve ilgili kurumlarla
-                    bilgi paylaşımı, KVKK kapsamında kişisel verilerinin işlenmesi ve aktarılması hususlarında
-                    ilgili sözleşmeyi imzalamış ve gerekli açık rızaları vermiştir.
+                    {t('customer.modals.newAccount.approval.title')}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: '0.75rem',
+                      fontWeight: 400,
+                      color: '#6c757d',
+                      lineHeight: 1.4,
+                      textAlign: 'justify'
+                    }}
+                  >
+                    {t('customer.modals.newAccount.approval.description')}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -132,8 +140,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
                       textAlign: 'justify'
                     }}
                   >
-                    İşbu onay, ilgili sözleşmenin müşteri tarafından imzalandığını ve yukarıda belirtilen
-                    yetkilerin müşterinin bilgisi ve talebi doğrultusunda kullanıldığını teyit eder.
+                    {t('customer.modals.newAccount.approval.confirmation')}
                   </Typography>
                 </Box>
               }
@@ -151,7 +158,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
 
       <DialogActions>
         <Button onClick={onClose} color="inherit">
-          İptal
+          {t('customer.modals.newAccount.buttons.cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
@@ -159,7 +166,7 @@ export default function NewCustomerModal({ open, onClose, onSubmit, customer }: 
           variant="contained"
           color="success"
         >
-          İleri
+          {t('customer.modals.newAccount.buttons.next')}
         </Button>
       </DialogActions>
     </Dialog>
