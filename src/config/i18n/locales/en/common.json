@@ -525,6 +525,9 @@
             "status": "STATUS",
             "ok": "OK",
             "printReport": "Print Report"
+        },
+        "sendResultDocument": {
+            "button": "Send Result Document"
         }
     },
     "modal": {
