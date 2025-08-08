@@ -83,6 +83,32 @@ const Page = () => {
                     )}
                 </div>
             </div>
+            <div className='absolute bottom-5  right-5'>
+                <button className="
+                    cursor-pointer 
+                    relative overflow-hidden
+                    bg-gradient-to-r from-[#813FB4] to-[#9B5BC7] 
+                    hover:from-[#9B5BC7] hover:to-[#B47CD9]
+                    active:from-[#6B2E9A] active:to-[#813FB4]
+                    text-white px-4 py-2  rounded-2xl 
+                    font-bold text-lg
+                    transition-all duration-300 ease-in-out
+                    shadow-2xl hover:shadow-3xl
+                    hover:scale-105 active:scale-95
+                    border-2 border-[#813FB4] hover:border-[#9B5BC7]
+                    flex items-center gap-3
+                ">
+
+
+
+                    {/* Button Text */}
+                    <span className="relative z-10 whitespace-nowrap">
+                        {t('report.sendResultDocument.button')}
+                    </span>
+
+
+                </button>
+            </div>
         </div>
     )
 }

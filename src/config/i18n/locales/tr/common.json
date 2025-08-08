@@ -524,6 +524,9 @@
             "status": "DURUM",
             "ok": "TAMAM",
             "printReport": "Raporu Yazdır"
+        },
+        "sendResultDocument": {
+            "button": "İşlem Sonuç Belgesi Gönder"
         }
     },
     "modal": {
